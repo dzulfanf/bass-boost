@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bass Boost — Audio Enhancer for Chrome</title>
+<meta name="description" content="Bass boost, 10-band EQ and fidelity engine for YouTube, Spotify, Netflix — free Chrome extension.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#03050d;--card:#090e1c;--border:#141d35;--blue:#2979ff;--purple:#a855f7;--cyan:#00e5ff;--gold:#f59e0b;--text:#d0daf5;--muted:#5a6f9a}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(41,121,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(41,121,255,.015) 1px,transparent 1px);background-size:32px 32px}
+section{position:relative;z-index:1}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:rgba(3,5,13,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1rem;letter-spacing:3px;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--muted);font-size:.82rem;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.btn-nav{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;font-size:.8rem;font-weight:500;padding:7px 18px;border-radius:100px;text-decoration:none;box-shadow:0 0 18px rgba(41,121,255,.35);transition:filter .2s}
+.btn-nav:hover{filter:brightness(1.15)}
+/* Lang toggle */
+.lang-switcher{display:flex;gap:3px}
+.lang-btn{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.75rem;padding:4px 9px;cursor:pointer;transition:all .15s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+.lang-btn.active{border-color:var(--blue);color:var(--blue);background:rgba(41,121,255,.1)}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
+.orb1{width:500px;height:400px;top:-80px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(41,121,255,.16),transparent 70%)}
+.orb2{width:360px;height:360px;bottom:-60px;right:5%;background:radial-gradient(circle,rgba(168,85,247,.12),transparent 70%)}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(41,121,255,.1);border:1px solid rgba(41,121,255,.28);border-radius:100px;padding:5px 14px;font-size:.7rem;color:#448aff;letter-spacing:.05em;margin-bottom:24px;animation:up .6s ease both}
+h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(2.2rem,5.5vw,3.8rem);line-height:1.1;letter-spacing:-1px;margin-bottom:18px;animation:up .6s .1s ease both}
+.grad{background:linear-gradient(135deg,var(--blue),var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1rem;color:var(--muted);max-width:480px;margin:0 auto 36px;animation:up .6s .2s ease both}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:up .6s .3s ease both}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;font-size:.88rem;font-weight:500;padding:12px 26px;border-radius:100px;text-decoration:none;box-shadow:0 0 28px rgba(41,121,255,.4);transition:all .2s}
+.btn-primary:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--border);color:var(--text);font-size:.88rem;padding:12px 26px;border-radius:100px;text-decoration:none;transition:all .2s}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+/* Mockup */
+.mockup{margin-top:52px;width:min(340px,88vw);background:var(--card);border:1px solid rgba(41,121,255,.25);border-radius:20px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.6),0 0 40px rgba(41,121,255,.07);animation:up .6s .4s ease both}
+.mbar{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.mlogo{font-family:'Orbitron',sans-serif;font-size:.7rem;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.mdot{width:6px;height:6px;border-radius:50%;background:#00ff88;box-shadow:0 0 6px #00ff8866}
+.viz{height:60px;background:#020409;display:flex;align-items:flex-end;gap:1.5px;padding:6px 10px 0}
+.vb{flex:1;border-radius:2px 2px 0 0;animation:vp var(--d,1s) var(--e,0s) ease-in-out infinite alternate}
+@keyframes vp{from{height:var(--mn,4px)}to{height:var(--mx,48px)}}
+.mrows{padding:12px;display:flex;flex-direction:column;gap:8px}
+.mrow{display:flex;align-items:center;gap:10px}
+.mlabel{font-size:.55rem;color:var(--muted);width:56px;letter-spacing:.04em}
+.mbar-t{flex:1;height:3px;border-radius:2px;background:var(--border);overflow:hidden}
+.mbar-f{height:100%;border-radius:2px}
+.mval{font-size:.55rem;font-weight:700;width:24px;text-align:right}
+/* FEATURES */
+.features{padding:96px 24px;max-width:1060px;margin:0 auto}
+.eyebrow{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--blue)}
+.sh{font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.2;margin-bottom:12px}
+.ss{font-size:.9rem;color:var(--muted);max-width:460px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:52px}
+.feat{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px;position:relative;overflow:hidden;transition:border-color .25s,transform .25s,box-shadow .25s}
+.feat:hover{border-color:rgba(41,121,255,.35);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.feat::after{content:'';position:absolute;top:0;left:20px;right:20px;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.ficon{font-size:1.7rem;margin-bottom:14px;display:block}
+.fh{font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.07em;margin-bottom:7px}
+.fp{font-size:.82rem;color:var(--muted);line-height:1.7}
+.pill{display:inline-block;margin-top:10px;font-size:.58rem;letter-spacing:.07em;padding:2px 9px;border-radius:100px}
+.pill-pro{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.22);color:var(--purple)}
+.pill-free{background:rgba(41,121,255,.08);border:1px solid rgba(41,121,255,.2);color:var(--blue)}
+/* HOW */
+.how{padding:96px 24px;background:linear-gradient(180deg,transparent,rgba(41,121,255,.025),transparent)}
+.how-inner{max-width:860px;margin:0 auto}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:52px;position:relative}
+.steps::before{content:'';position:absolute;top:30px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--border),var(--border),transparent)}
+.step{text-align:center;padding:0 16px}
+.snum{width:60px;height:60px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:1rem;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;box-shadow:0 0 20px rgba(41,121,255,.35)}
+.step-h{font-family:'Orbitron',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.07em;margin-bottom:7px}
+.step-p{font-size:.8rem;color:var(--muted);line-height:1.65}
+/* PRICING */
+.pricing{padding:96px 24px;max-width:780px;margin:0 auto}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:52px}
+@media(max-width:560px){.pgrid{grid-template-columns:1fr}}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;overflow:hidden}
+.pcard.pro{border-color:rgba(245,158,11,.38);background:linear-gradient(135deg,rgba(245,158,11,.07),var(--card));box-shadow:0 0 36px rgba(245,158,11,.07)}
+.pcard.pro::after{content:'';position:absolute;top:0;left:20px;right:20px;height:1px;background:linear-gradient(90deg,transparent,rgba(245,158,11,.55),transparent)}
+.pname{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;margin-bottom:4px}
+.pprice{font-size:1.9rem;font-weight:300;margin:14px 0}
+.pprice small{font-size:.85rem;color:var(--muted)}
+.plist{list-style:none;margin:18px 0 24px;display:flex;flex-direction:column;gap:9px}
+.plist li{font-size:.82rem;color:var(--muted);display:flex;gap:8px}
+.plist li::before{content:'✓';color:var(--blue);font-weight:700;flex-shrink:0}
+.plist li.pro-item::before{color:var(--gold)}
+.plist li.dim{color:#2a3550}.plist li.dim::before{content:'–';color:var(--border)}
+.bcta{display:block;text-align:center;border-radius:12px;padding:11px;font-size:.85rem;font-weight:600;text-decoration:none;transition:all .2s}
+.bcta.donate{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;box-shadow:0 0 20px rgba(245,158,11,.28)}
+.bcta.donate:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.bcta.install{background:transparent;border:1px solid var(--border);color:var(--text)}
+.bcta.install:hover{border-color:var(--blue);color:var(--blue)}
+/* FAQ */
+.faq{padding:96px 24px;max-width:680px;margin:0 auto}
+.flist{margin-top:48px;display:flex;flex-direction:column;gap:4px}
+.fi{border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.fi.open{border-color:rgba(41,121,255,.3)}
+.fq{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;font-size:.88rem;font-weight:500;user-select:none}
+.fq:hover{color:#448aff}
+.chev{font-size:.65rem;color:var(--muted);transition:transform .22s;flex-shrink:0;margin-left:10px}
+.fi.open .chev{transform:rotate(90deg);color:var(--blue)}
+.fa{max-height:0;overflow:hidden;transition:max-height .28s ease,padding .28s;font-size:.83rem;color:var(--muted);line-height:1.75;padding:0 20px}
+.fi.open .fa{max-height:240px;padding:0 20px 16px}
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.75rem;color:var(--muted);position:relative;z-index:1}
+@media(max-width:640px){nav{padding:12px 20px}.nav-links{display:none}footer{justify-content:center;text-align:center}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Bass Boost</div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#how" data-i18n="navHow">How it works</a>
+      <a href="#pricing" data-i18n="navSupport">Support</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="siteEN" onclick="siteLang('en')">EN</button>
+      <button class="lang-btn" id="siteID" onclick="siteLang('id')">ID</button>
+    </div>
+    <a href="https://chrome.google.com/webstore" class="btn-nav" data-i18n="navCta" target="_blank">Add to Chrome — Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="badge" data-i18n="heroBadge">🎧 Chrome Extension · Free</div>
+  <h1><span data-i18n="heroH1a">Hear every song</span><br><span data-i18n="heroH1b">the way it </span><span class="grad" data-i18n="heroH1c">should sound</span></h1>
+  <p data-i18n="heroSub">Bass boost, 10-band EQ, Fidelity engine and Night Mode — for YouTube, Spotify, Netflix and any site in Chrome.</p>
+  <div class="hero-btns">
+    <a href="https://chrome.google.com/webstore" class="btn-primary" data-i18n="heroCta" target="_blank">⬇ Add to Chrome — free</a>
+    <a href="#pricing" class="btn-ghost" data-i18n="heroSecondary" target="_blank">Support the project ☕</a>
+  </div>
+  <div class="mockup">
+    <div class="mbar">
+      <div class="mlogo">Bass Boost</div>
+      <div style="font-size:.55rem;color:var(--muted)">youtube.com</div>
+      <div class="mdot"></div>
+    </div>
+    <div class="viz">
+      <div class="vb" style="--mn:6px;--mx:28px;--d:1.1s;--e:0s;background:#2979ff"></div>
+      <div class="vb" style="--mn:10px;--mx:46px;--d:.9s;--e:.1s;background:#3d7fff"></div>
+      <div class="vb" style="--mn:8px;--mx:52px;--d:1.3s;--e:.05s;background:#5561ff"></div>
+      <div class="vb" style="--mn:14px;--mx:48px;--d:.8s;--e:.15s;background:#7548f7"></div>
+      <div class="vb" style="--mn:6px;--mx:42px;--d:1.2s;--e:.2s;background:#8f40f0"></div>
+      <div class="vb" style="--mn:18px;--mx:54px;--d:1s;--e:.08s;background:#a538e8"></div>
+      <div class="vb" style="--mn:10px;--mx:38px;--d:1.4s;--e:.25s;background:#b830e0"></div>
+      <div class="vb" style="--mn:8px;--mx:50px;--d:.95s;--e:.12s;background:#c028d8"></div>
+      <div class="vb" style="--mn:4px;--mx:30px;--d:1.15s;--e:.3s;background:#d020cf"></div>
+      <div class="vb" style="--mn:12px;--mx:44px;--d:1.05s;--e:.18s;background:#d818c4"></div>
+      <div class="vb" style="--mn:6px;--mx:36px;--d:1.25s;--e:.22s;background:#e010b8"></div>
+      <div class="vb" style="--mn:16px;--mx:52px;--d:.85s;--e:.07s;background:#e808ac"></div>
+    </div>
+    <div class="mrows">
+      <div class="mrow"><div class="mlabel">BASS</div><div class="mbar-t"><div class="mbar-f" style="width:65%;background:linear-gradient(90deg,#2979ff,#448aff)"></div></div><div class="mval" style="color:#448aff">+13</div></div>
+      <div class="mrow"><div class="mlabel">FIDELITY</div><div class="mbar-t"><div class="mbar-f" style="width:80%;background:linear-gradient(90deg,#00bcd4,#00e5ff)"></div></div><div class="mval" style="color:#00e5ff">80%</div></div>
+      <div class="mrow"><div class="mlabel">VOLUME</div><div class="mbar-t"><div class="mbar-f" style="width:90%;background:linear-gradient(90deg,#a855f7,#c084fc)"></div></div><div class="mval" style="color:#c084fc">120%</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="eyebrow" data-i18n="featEyebrow">Features</div>
+  <div class="sh" data-i18n="featTitle">Everything your ears deserve</div>
+  <div class="ss" data-i18n="featSub">Real Web Audio API processing — not just a volume slider.</div>
+  <div class="fgrid">
+    <div class="feat"><span class="ficon">⚡</span><div class="fh" data-i18n="f1h">Bass Boost</div><p class="fp" data-i18n="f1p">4-stage filter stack targeting sub-bass (30Hz), punch (55Hz), body (90Hz) and upper-bass (180Hz) for real, defined low end — not just mud.</p><span class="pill pill-free" data-i18n="free">Free</span></div>
+    <div class="feat" style="border-color:rgba(168,85,247,.2);background:linear-gradient(135deg,rgba(168,85,247,.05),var(--card))"><span class="ficon">🎛️</span><div class="fh" data-i18n="f2h">10-Band Equalizer</div><p class="fp" data-i18n="f2p">Full EQ from 32Hz to 16kHz with 6 presets — Bass+, Treble+, Vocal, Club, Rock and Flat. Your perfect sound in seconds.</p><span class="pill pill-pro">Pro</span></div>
+    <div class="feat" style="border-color:rgba(0,229,255,.18);background:linear-gradient(135deg,rgba(0,229,255,.04),var(--card))"><span class="ficon">✦</span><div class="fh" data-i18n="f3h">Fidelity Engine</div><p class="fp" data-i18n="f3p">Dynamically measures weak frequency bands every 150ms and boosts them in real time — restoring the original recording's tonal balance.</p><span class="pill pill-pro">Pro</span></div>
+    <div class="feat"><span class="ficon">🌙</span><div class="fh" data-i18n="f4h">Night Mode</div><p class="fp" data-i18n="f4p">Dynamic range compression tames loud explosions while keeping quiet dialogue clearly audible. Perfect for late-night watching.</p><span class="pill pill-free" data-i18n="free">Free</span></div>
+    <div class="feat"><span class="ficon">📊</span><div class="fh" data-i18n="f5h">Live Visualizer</div><p class="fp" data-i18n="f5p">Real-time frequency spectrum from the Web Audio API analyser — not a fake animation. See the actual music playing.</p><span class="pill pill-free" data-i18n="free">Free</span></div>
+    <div class="feat"><span class="ficon">🔊</span><div class="fh" data-i18n="f6h">Loudness & Volume</div><p class="fp" data-i18n="f6p">Boost output up to 150% and add loudness gain. Works on any tab — YouTube, Spotify, Netflix, Twitch, anything.</p><span class="pill pill-free" data-i18n="free">Free</span></div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="how" id="how">
+  <div class="how-inner">
+    <div class="eyebrow" data-i18n="howEyebrow">How it works</div>
+    <div class="sh" data-i18n="howTitle">Set up in under a minute</div>
+    <div class="steps">
+      <div class="step"><div class="snum">1</div><div class="step-h" data-i18n="s1h">Install</div><p class="step-p" data-i18n="s1p">Add Bass Boost from the Chrome Web Store — free, no account needed.</p></div>
+      <div class="step"><div class="snum">2</div><div class="step-h" data-i18n="s2h">Enable</div><p class="step-p" data-i18n="s2p">Open YouTube, click the extension icon, toggle the engine on.</p></div>
+      <div class="step"><div class="snum">3</div><div class="step-h" data-i18n="s3h">Tune</div><p class="step-p" data-i18n="s3p">Drag the bass slider, pick an EQ preset, enable fidelity — hear the difference immediately.</p></div>
+      <div class="step"><div class="snum">4</div><div class="step-h" data-i18n="s4h">Enjoy</div><p class="step-p" data-i18n="s4p">Settings save automatically. Your sound, everywhere.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="eyebrow" data-i18n="priceEyebrow">Support</div>
+  <div class="sh" data-i18n="priceTitle">Free forever, Pro for supporters</div>
+  <div class="ss" data-i18n="priceSub">No subscription. Donate once on Saweria — get lifetime Pro access instantly.</div>
+  <div class="pgrid">
+    <div class="pcard">
+      <div class="pname" data-i18n="freeLabel">Free</div>
+      <div class="pprice">Rp 0 <small data-i18n="forever">/ forever</small></div>
+      <ul class="plist">
+        <li data-i18n="fl1">Bass Boost (up to +8dB)</li>
+        <li data-i18n="fl2">Volume up to 150%</li>
+        <li data-i18n="fl3">Night Mode</li>
+        <li data-i18n="fl4">Live Visualizer</li>
+        <li class="dim" data-i18n="fl5">10-Band EQ</li>
+        <li class="dim" data-i18n="fl6">Fidelity Engine</li>
+        <li class="dim" data-i18n="fl7">Full Bass Boost (+20dB)</li>
+      </ul>
+      <a href="https://chrome.google.com/webstore" class="bcta install" data-i18n="installBtn" target="_blank">Add to Chrome</a>
+    </div>
+    <div class="pcard pro">
+      <div class="pname" style="color:var(--gold)" data-i18n="proLabel">👑 Pro</div>
+      <div class="pprice" style="color:var(--gold)"><span data-i18n="anyAmount">Any amount</span> <small data-i18n="lifetime">/ lifetime</small></div>
+      <ul class="plist">
+        <li class="pro-item" data-i18n="pl1">Everything in Free</li>
+        <li class="pro-item" data-i18n="pl2">Full Bass Boost (up to +20dB)</li>
+        <li class="pro-item" data-i18n="pl3">10-Band EQ + 6 Presets</li>
+        <li class="pro-item" data-i18n="pl4">Fidelity Engine</li>
+        <li class="pro-item" data-i18n="pl5">Lifetime key — no expiry</li>
+        <li class="pro-item" data-i18n="pl6">Key delivered instantly by email</li>
+      </ul>
+      <a href="https://saweria.co/dzulfanDev" class="bcta donate" data-i18n="donateBtn" target="_blank">☕ Donate via Saweria</a>
+      <p style="font-size:.68rem;color:var(--muted);margin-top:10px;text-align:center;line-height:1.6" data-i18n="donateNote">
+        Type your email in the Saweria message field.<br>Your key arrives automatically — no manual steps.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="eyebrow" data-i18n="faqEyebrow">FAQ</div>
+  <div class="sh" data-i18n="faqTitle">Common questions</div>
+  <div class="flist">
+    <div class="fi"><div class="fq" onclick="tFaq(this)"><span data-i18n="q1">Does it work on YouTube and Spotify?</span><span class="chev">›</span></div><div class="fa" data-i18n="a1">Yes — it works on any site that plays audio through HTML5 media. YouTube, Spotify Web, Netflix, Twitch, SoundCloud and more.</div></div>
+    <div class="fi"><div class="fq" onclick="tFaq(this)"><span data-i18n="q2">How does the Saweria Pro unlock work?</span><span class="chev">›</span></div><div class="fa" data-i18n="a2">Donate any amount on Saweria and type your email in the message/note field. The server receives the donation via webhook, generates a lifetime key, and emails it to you within seconds. Paste it in the extension to unlock Pro.</div></div>
+    <div class="fi"><div class="fq" onclick="tFaq(this)"><span data-i18n="q3">Is there a free trial?</span><span class="chev">›</span></div><div class="fa" data-i18n="a3">Yes — open the extension, scroll to Support & Unlock Pro, expand it and enter your email under the free trial section. You get a 3-day full Pro trial with no payment needed.</div></div>
+    <div class="fi"><div class="fq" onclick="tFaq(this)"><span data-i18n="q4">Will it keep working after I close the popup?</span><span class="chev">›</span></div><div class="fa" data-i18n="a4">Yes. The audio processing runs inside the page via an injected Web Audio context. Closing the popup doesn't stop it — it continues until you close or navigate the tab.</div></div>
+    <div class="fi"><div class="fq" onclick="tFaq(this)"><span data-i18n="q5">I donated but didn't receive my key. What do I do?</span><span class="chev">›</span></div><div class="fa" data-i18n="a5">Make sure you typed your email in the Saweria message/note field when donating. If you forgot, contact dzulfanDev on Saweria with your email and donation ID — your key will be sent manually.</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo" style="font-size:.82rem">Bass Boost</div>
+  <div>Built by <a href="https://saweria.co/dzulfanDev" style="color:var(--muted);text-decoration:none" target="_blank">dzulfanDev</a></div>
+  <div data-i18n="footerNote">Chrome Extension · Free</div>
+</footer>
+
+<script>
+const SITE_STRINGS = {
+  en: {
+    navFeatures:'Features', navHow:'How it works', navSupport:'Support', navCta:'Add to Chrome — Free',
+    heroBadge:'🎧 Chrome Extension · Free',
+    heroH1a:'Hear every song', heroH1b:'the way it ', heroH1c:'should sound',
+    heroSub:'Bass boost, 10-band EQ, Fidelity engine and Night Mode — for YouTube, Spotify, Netflix and any site in Chrome.',
+    heroCta:'⬇ Add to Chrome — free', heroSecondary:'Support the project ☕',
+    featEyebrow:'Features', featTitle:'Everything your ears deserve', featSub:'Real Web Audio API processing — not just a volume slider.',
+    f1h:'Bass Boost', f1p:'4-stage filter stack targeting sub-bass (30Hz), punch (55Hz), body (90Hz) and upper-bass (180Hz) for real, defined low end — not just mud.',
+    f2h:'10-Band Equalizer', f2p:'Full EQ from 32Hz to 16kHz with 6 presets — Bass+, Treble+, Vocal, Club, Rock and Flat. Your perfect sound in seconds.',
+    f3h:'Fidelity Engine', f3p:"Dynamically measures weak frequency bands every 150ms and boosts them in real time — restoring the original recording's tonal balance.",
+    f4h:'Night Mode', f4p:'Dynamic range compression tames loud explosions while keeping quiet dialogue clearly audible. Perfect for late-night watching.',
+    f5h:'Live Visualizer', f5p:'Real-time frequency spectrum from the Web Audio API analyser — not a fake animation. See the actual music playing.',
+    f6h:'Loudness & Volume', f6p:'Boost output up to 150% and add loudness gain. Works on any tab — YouTube, Spotify, Netflix, Twitch, anything.',
+    free:'Free',
+    howEyebrow:'How it works', howTitle:'Set up in under a minute',
+    s1h:'Install', s1p:'Add Bass Boost from the Chrome Web Store — free, no account needed.',
+    s2h:'Enable', s2p:'Open YouTube, click the extension icon, toggle the engine on.',
+    s3h:'Tune', s3p:'Drag the bass slider, pick an EQ preset, enable fidelity — hear the difference immediately.',
+    s4h:'Enjoy', s4p:'Settings save automatically. Your sound, everywhere.',
+    priceEyebrow:'Support', priceTitle:'Free forever, Pro for supporters', priceSub:'No subscription. Donate once on Saweria — get lifetime Pro access instantly.',
+    freeLabel:'Free', forever:'/ forever', anyAmount:'Any amount', lifetime:'/ lifetime', proLabel:'👑 Pro',
+    fl1:'Bass Boost (up to +8dB)', fl2:'Volume up to 150%', fl3:'Night Mode', fl4:'Live Visualizer',
+    fl5:'10-Band EQ', fl6:'Fidelity Engine', fl7:'Full Bass Boost (+20dB)',
+    pl1:'Everything in Free', pl2:'Full Bass Boost (up to +20dB)', pl3:'10-Band EQ + 6 Presets',
+    pl4:'Fidelity Engine', pl5:'Lifetime key — no expiry', pl6:'Key delivered instantly by email',
+    installBtn:'Add to Chrome', donateBtn:'☕ Donate via Saweria',
+    donateNote:'Type your email in the Saweria message field.<br>Your key arrives automatically — no manual steps.',
+    faqEyebrow:'FAQ', faqTitle:'Common questions',
+    q1:'Does it work on YouTube and Spotify?', a1:'Yes — it works on any site that plays audio through HTML5 media. YouTube, Spotify Web, Netflix, Twitch, SoundCloud and more.',
+    q2:'How does the Saweria Pro unlock work?', a2:'Donate any amount on Saweria and type your email in the message/note field. The server receives the donation via webhook, generates a lifetime key, and emails it to you within seconds. Paste it in the extension to unlock Pro.',
+    q3:'Is there a free trial?', a3:'Yes — open the extension, scroll to Support & Unlock Pro, expand it and enter your email under the free trial section. You get a 3-day full Pro trial with no payment needed.',
+    q4:'Will it keep working after I close the popup?', a4:"Yes. The audio processing runs inside the page via an injected Web Audio context. Closing the popup doesn't stop it — it continues until you close or navigate the tab.",
+    q5:"I donated but didn't receive my key. What do I do?", a5:'Make sure you typed your email in the Saweria message/note field when donating. If you forgot, contact dzulfanDev on Saweria with your email and donation ID — your key will be sent manually.',
+    footerNote:'Chrome Extension · Free',
+  },
+  id: {
+    navFeatures:'Fitur', navHow:'Cara kerja', navSupport:'Dukung', navCta:'Tambah ke Chrome — Gratis',
+    heroBadge:'🎧 Ekstensi Chrome · Gratis',
+    heroH1a:'Dengar setiap lagu', heroH1b:'sesuai ', heroH1c:'seharusnya',
+    heroSub:'Bass boost, EQ 10-band, Fidelity engine dan Mode Malam — untuk YouTube, Spotify, Netflix dan situs apapun di Chrome.',
+    heroCta:'⬇ Tambah ke Chrome — gratis', heroSecondary:'Dukung proyek ini ☕',
+    featEyebrow:'Fitur', featTitle:'Semua yang telingamu butuhkan', featSub:'Pemrosesan Web Audio API nyata — bukan sekadar pengatur volume.',
+    f1h:'Bass Boost', f1p:'Filter 4 tahap menargetkan sub-bass (30Hz), pukulan (55Hz), tubuh (90Hz) dan upper-bass (180Hz) untuk bass yang nyata dan terdefinisi.',
+    f2h:'Equalizer 10-Band', f2p:'EQ lengkap dari 32Hz hingga 16kHz dengan 6 preset — Bass+, Treble+, Vokal, Club, Rock dan Flat.',
+    f3h:'Fidelity Engine', f3p:'Mengukur band frekuensi lemah setiap 150ms dan meningkatkannya secara real time — memulihkan keseimbangan tonal rekaman asli.',
+    f4h:'Mode Malam', f4p:'Kompresi dinamis meredam ledakan keras sambil menjaga dialog tenang tetap jelas. Sempurna untuk menonton larut malam.',
+    f5h:'Visualizer Langsung', f5p:'Spektrum frekuensi real-time dari analyser Web Audio API — bukan animasi palsu. Lihat musik yang sebenarnya diputar.',
+    f6h:'Kenyaringan & Volume', f6p:'Tingkatkan output hingga 150% dan tambahkan gain kenyaringan. Bekerja di tab apapun — YouTube, Spotify, Netflix, Twitch.',
+    free:'Gratis',
+    howEyebrow:'Cara kerja', howTitle:'Siap dalam kurang dari semenit',
+    s1h:'Pasang', s1p:'Tambahkan Bass Boost dari Chrome Web Store — gratis, tanpa akun.',
+    s2h:'Aktifkan', s2p:'Buka YouTube, klik ikon ekstensi, aktifkan mesinnya.',
+    s3h:'Setel', s3p:'Geser slider bass, pilih preset EQ, aktifkan fidelity — langsung terasa bedanya.',
+    s4h:'Nikmati', s4p:'Pengaturan tersimpan otomatis. Suaramu, di mana saja.',
+    priceEyebrow:'Dukung', priceTitle:'Gratis selamanya, Pro untuk pendukung', priceSub:'Tanpa langganan. Donasi sekali di Saweria — dapatkan akses Pro seumur hidup.',
+    freeLabel:'Gratis', forever:'/ selamanya', anyAmount:'Berapa saja', lifetime:'/ seumur hidup', proLabel:'👑 Pro',
+    fl1:'Bass Boost (hingga +8dB)', fl2:'Volume hingga 150%', fl3:'Mode Malam', fl4:'Visualizer Langsung',
+    fl5:'EQ 10-Band', fl6:'Fidelity Engine', fl7:'Full Bass Boost (+20dB)',
+    pl1:'Semua fitur Gratis', pl2:'Full Bass Boost (hingga +20dB)', pl3:'EQ 10-Band + 6 Preset',
+    pl4:'Fidelity Engine', pl5:'Kunci seumur hidup — tidak kedaluwarsa', pl6:'Kunci dikirim instan ke email',
+    installBtn:'Tambah ke Chrome', donateBtn:'☕ Donasi via Saweria',
+    donateNote:'Ketik emailmu di kolom pesan Saweria.<br>Kuncimu tiba otomatis — tanpa langkah manual.',
+    faqEyebrow:'FAQ', faqTitle:'Pertanyaan umum',
+    q1:'Apakah berfungsi di YouTube dan Spotify?', a1:'Ya — berfungsi di situs apapun yang memutar audio melalui HTML5. YouTube, Spotify Web, Netflix, Twitch, SoundCloud dan lainnya.',
+    q2:'Bagaimana cara unlock Pro via Saweria?', a2:'Donasi berapa saja di Saweria dan ketik emailmu di kolom pesan. Server menerima donasi via webhook, menghasilkan kunci seumur hidup, dan mengirimkannya dalam hitungan detik. Tempel di ekstensi untuk membuka Pro.',
+    q3:'Apakah ada uji coba gratis?', a3:'Ya — buka ekstensi, scroll ke Dukung & Buka Pro, perluas dan masukkan emailmu di bagian uji coba gratis. Kamu mendapat 3 hari Pro penuh tanpa pembayaran.',
+    q4:'Apakah tetap berfungsi setelah popup ditutup?', a4:'Ya. Pemrosesan audio berjalan di dalam halaman via konteks Web Audio yang disuntikkan. Menutup popup tidak menghentikannya — terus berjalan hingga tab ditutup.',
+    q5:'Saya sudah donasi tapi belum dapat kunci. Apa yang harus dilakukan?', a5:'Pastikan kamu mengetik emailmu di kolom pesan Saweria saat donasi. Jika lupa, hubungi dzulfanDev di Saweria dengan emailmu dan ID donasi — kuncimu akan dikirim manual.',
+    footerNote:'Ekstensi Chrome · Gratis',
+  },
+};
+
+let siteCurLang = localStorage.getItem('bassboost-lang') || (navigator.language.startsWith('id') ? 'id' : 'en');
+
+function siteLang(l) {
+  siteCurLang = l;
+  localStorage.setItem('bassboost-lang', l);
+  const s = SITE_STRINGS[l];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (s[key] !== undefined) el.innerHTML = s[key];
+  });
+  document.getElementById('siteEN').classList.toggle('active', l === 'en');
+  document.getElementById('siteID').classList.toggle('active', l === 'id');
+  document.documentElement.lang = l;
+}
+
+// Apply on load
+siteLang(siteCurLang);
+
+function tFaq(el) {
+  const item = el.closest('.fi');
+  const open = item.classList.contains('open');
+  document.querySelectorAll('.fi').forEach(i => i.classList.remove('open'));
+  if (!open) item.classList.add('open');
+}
+</script>
+</body>
+</html>

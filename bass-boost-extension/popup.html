@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BOOM</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04060f;
+    --card: #0b1020;
+    --border: #1a2240;
+    --border2: #243060;
+    --blue: #2979ff;
+    --blue-glow: rgba(41,121,255,0.3);
+    --purple: #a855f7;
+    --purple-glow: rgba(168,85,247,0.25);
+    --cyan: #00e5ff;
+    --cyan-glow: rgba(0,229,255,0.25);
+    --gold: #f59e0b;
+    --gold-glow: rgba(245,158,11,0.3);
+    --text: #c8d4f0;
+    --muted: #6b7faa;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Space Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    width: 340px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 640px;
+    background-image:
+      linear-gradient(rgba(41,121,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(41,121,255,0.02) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  ::-webkit-scrollbar { width:3px; }
+  ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+  .wrap { padding: 13px; display: flex; flex-direction: column; gap: 7px; }
+
+  /* ── Header ── */
+  header { display:flex; align-items:center; justify-content:space-between; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .logo { font-family:'Orbitron',sans-serif; font-weight:900; font-size:0.95rem; letter-spacing:2px;
+    background:linear-gradient(135deg,var(--blue),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    position:relative; z-index:1; }
+  .logo-sub { font-size:0.4rem; letter-spacing:0.2em; color:var(--muted); -webkit-text-fill-color:var(--muted); margin-top:-1px; }
+  .status-pill { display:flex; align-items:center; gap:5px; background:var(--card); border:1px solid var(--border);
+    border-radius:100px; padding:4px 10px; font-size:0.5rem; color:var(--muted); letter-spacing:0.07em; }
+  .sdot { width:5px; height:5px; border-radius:50%; background:var(--muted); flex-shrink:0; transition:all 0.4s; }
+  .sdot.on { background:var(--cyan); box-shadow:0 0 8px var(--cyan-glow); animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.45} }
+
+  /* ── Cards ── */
+  .card {
+    background:var(--card); border:1px solid var(--border); border-radius:18px;
+    padding:12px 14px; overflow:hidden; position:relative;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.04) inset;
+    transition: box-shadow 0.2s;
+  }
+  .card::before { content:''; position:absolute; top:0; left:16px; right:16px; height:1px;
+    pointer-events:none;
+    background:linear-gradient(90deg,transparent,var(--border2),transparent); }
+  .card-blue  { background:linear-gradient(135deg,rgba(41,121,255,0.09),rgba(41,121,255,0.02)); border-color:rgba(41,121,255,0.35); box-shadow:0 6px 28px rgba(0,0,0,0.55),0 0 20px rgba(41,121,255,0.08),0 1px 0 rgba(255,255,255,0.04) inset; }
+  .card-blue::before  { background:linear-gradient(90deg,transparent,rgba(41,121,255,0.5),transparent); }
+  .card-purple { background:linear-gradient(135deg,rgba(168,85,247,0.09),rgba(168,85,247,0.02)); border-color:rgba(168,85,247,0.3); box-shadow:0 6px 28px rgba(0,0,0,0.55),0 0 20px rgba(168,85,247,0.07),0 1px 0 rgba(255,255,255,0.04) inset; }
+  .card-purple::before { background:linear-gradient(90deg,transparent,rgba(168,85,247,0.5),transparent); }
+  .card-cyan  { background:linear-gradient(135deg,rgba(0,229,255,0.07),rgba(0,229,255,0.01)); border-color:rgba(0,229,255,0.25); box-shadow:0 6px 28px rgba(0,0,0,0.55),0 0 20px rgba(0,229,255,0.06),0 1px 0 rgba(255,255,255,0.04) inset; }
+  .card-cyan::before  { background:linear-gradient(90deg,transparent,rgba(0,229,255,0.4),transparent); }
+  .card-gold  { background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(245,158,11,0.02)); border-color:rgba(245,158,11,0.4); box-shadow:0 6px 28px rgba(0,0,0,0.55),0 0 24px rgba(245,158,11,0.1),0 1px 0 rgba(255,255,255,0.04) inset; }
+  .card-gold::before  { background:linear-gradient(90deg,transparent,rgba(245,158,11,0.6),transparent); }
+
+  /* ── Pro badge / lock ── */
+  .pro-badge {
+    font-family:'Orbitron',sans-serif; font-size:0.42rem; font-weight:700;
+    letter-spacing:0.1em; color:var(--gold);
+    background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3);
+    border-radius:100px; padding:2px 7px;
+  }
+  .lock-overlay {
+    position:absolute; inset:0; border-radius:18px;
+    background:rgba(4,6,15,0.72); backdrop-filter:blur(2px);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:6px; cursor:pointer; transition:background 0.2s; z-index:10;
+  }
+  .lock-overlay:hover { background:rgba(4,6,15,0.6); }
+  .lock-icon { font-size:1.1rem; }
+  .lock-text { font-family:'Orbitron',sans-serif; font-size:0.52rem; color:var(--gold); letter-spacing:0.1em; }
+  .lock-sub  { font-size:0.46rem; color:var(--muted); }
+
+  /* ── Pro panel ── */
+  .pro-panel { display:flex; flex-direction:column; gap:5px; }
+  .pro-email-row { display:flex; gap:5px; }
+  .pro-email-row input {
+    flex:1; background:#07090f; border:1px solid var(--border2); border-radius:10px;
+    padding:6px 10px; font-family:'Space Mono',monospace; font-size:0.58rem; color:var(--text);
+    outline:none; transition:border-color 0.2s;
+  }
+  .pro-email-row input:focus { border-color:var(--gold); }
+  .pro-email-row input::placeholder { color:var(--muted); }
+
+  .btn-gold {
+    background:linear-gradient(135deg,#f59e0b,#d97706); border:none; border-radius:10px;
+    color:#000; font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.54rem;
+    letter-spacing:0.08em; padding:7px 12px; cursor:pointer; white-space:nowrap;
+    box-shadow:0 0 16px rgba(245,158,11,0.35); transition:all 0.15s;
+  }
+  .btn-gold:hover { filter:brightness(1.1); transform:scale(1.02); }
+  .btn-gold:active { transform:scale(0.98); }
+  .btn-gold:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+  .pro-key-row { display:flex; gap:5px; }
+  .pro-key-row input {
+    flex:1; background:#07090f; border:1px solid var(--border2); border-radius:10px;
+    padding:6px 10px; font-family:'Space Mono',monospace; font-size:0.54rem; color:var(--gold);
+    outline:none; letter-spacing:0.05em;
+  }
+  .btn-verify {
+    background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); border-radius:10px;
+    color:var(--gold); font-family:'Space Mono',monospace; font-size:0.52rem;
+    padding:6px 10px; cursor:pointer; transition:all 0.15s; white-space:nowrap;
+  }
+  .btn-verify:hover { background:rgba(245,158,11,0.25); }
+
+  .pro-msg { font-size:0.5rem; min-height:14px; padding:0 2px; }
+  .pro-msg.ok  { color:#4ade80; }
+  .pro-msg.err { color:#f87171; }
+  .pro-msg.inf { color:var(--muted); }
+
+  /* ── Pro status bar ── */
+  .pro-status {
+    display:flex; align-items:center; justify-content:space-between;
+    background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2);
+    border-radius:12px; padding:7px 12px;
+  }
+  .pro-status-left { display:flex; align-items:center; gap:7px; }
+  .pro-crown { font-size:0.9rem; }
+  .pro-status-name { font-family:'Orbitron',sans-serif; font-size:0.6rem; font-weight:700; color:var(--gold); letter-spacing:0.08em; }
+  .pro-status-sub  { font-size:0.46rem; color:var(--muted); margin-top:1px; }
+  .btn-signout { background:transparent; border:1px solid var(--border2); border-radius:8px;
+    color:var(--muted); font-family:'Space Mono',monospace; font-size:0.48rem;
+    padding:4px 8px; cursor:pointer; transition:all 0.15s; }
+  .btn-signout:hover { border-color:#f87171; color:#f87171; }
+
+  /* ── Power row ── */
+  .power-row { display:flex; align-items:center; justify-content:space-between; }
+  .power-label { font-family:'Orbitron',sans-serif; font-size:0.72rem; font-weight:700; color:var(--text); }
+  .site-badge { font-size:0.5rem; color:var(--muted); margin-top:2px; }
+
+  /* ── Viz ── */
+  .viz-wrap { border-radius:14px; overflow:hidden; height:72px; background:#020409;
+    border:1px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.5),0 0 16px rgba(41,121,255,0.05); }
+  canvas { display:block; width:100%; height:100%; }
+
+  /* ── Toggles ── */
+  .big-toggle { width:46px; height:25px; border-radius:100px; background:var(--border); position:relative;
+    cursor:pointer; transition:all 0.3s; flex-shrink:0; overflow:hidden; }
+  .big-toggle.on { background:linear-gradient(135deg,var(--blue),var(--purple)); box-shadow:0 0 14px var(--blue-glow); }
+  .big-toggle::after { content:''; position:absolute; top:3px; left:3px; width:19px; height:19px;
+    background:#fff; border-radius:50%; transition:transform 0.28s cubic-bezier(.4,0,.2,1); box-shadow:0 1px 4px rgba(0,0,0,0.5); }
+  .big-toggle.on::after { transform:translateX(21px); }
+
+  .sm-toggle { width:28px; height:16px; border-radius:100px; background:var(--border); position:relative;
+    cursor:pointer; transition:all 0.25s; flex-shrink:0; overflow:hidden; }
+  .sm-toggle.on { background:linear-gradient(135deg,var(--blue),var(--purple)); box-shadow:0 0 8px var(--blue-glow); }
+  .sm-toggle.on-cyan { background:var(--cyan) !important; box-shadow:0 0 8px var(--cyan-glow) !important; }
+  .sm-toggle.on-gold { background:var(--gold) !important; box-shadow:0 0 8px var(--gold-glow) !important; }
+  .sm-toggle::after { content:''; position:absolute; top:2px; left:2px; width:12px; height:12px;
+    background:#fff; border-radius:50%; transition:transform 0.25s cubic-bezier(.4,0,.2,1); box-shadow:0 1px 3px rgba(0,0,0,0.4); }
+  .sm-toggle.on::after,.sm-toggle.on-cyan::after,.sm-toggle.on-gold::after { transform:translateX(12px); }
+
+  /* ── Section header ── */
+  .sec-hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
+  .sec-title { font-family:'Orbitron',sans-serif; font-size:0.58rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+  .sec-sub { font-size:0.48rem; color:var(--muted); margin-top:2px; line-height:1.35; }
+
+  /* ── Slider rows ── */
+  .sl-row { display:flex; align-items:center; gap:7px; }
+  .sl-label { font-size:0.5rem; color:var(--muted); width:52px; flex-shrink:0; letter-spacing:0.04em; }
+  .sl-val { font-size:0.58rem; color:var(--blue); width:30px; text-align:right; flex-shrink:0; font-weight:700; }
+  .sl-val-cyan { color:var(--cyan) !important; }
+  .sl-val-purple { color:var(--purple) !important; }
+  .sl-val-gold { color:var(--gold) !important; }
+
+  input[type="range"].hsl {
+    -webkit-appearance:none; appearance:none; flex:1; height:3px; border-radius:2px; outline:none; cursor:pointer;
+  }
+  input[type="range"].hsl::-webkit-slider-thumb {
+    -webkit-appearance:none; width:13px; height:13px; border-radius:50%;
+    background:radial-gradient(circle,#fff 30%,var(--blue) 100%);
+    box-shadow:0 0 8px var(--blue-glow),0 0 2px #fff; cursor:grab; transition:transform 0.1s;
+  }
+  input[type="range"].hsl:active::-webkit-slider-thumb { transform:scale(1.2); cursor:grabbing; }
+
+  /* ── Bass ── */
+  .bass-row { display:flex; align-items:center; gap:8px; }
+  .bass-num { font-family:'Orbitron',sans-serif; font-size:0.82rem; font-weight:900;
+    background:linear-gradient(135deg,var(--blue),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 6px var(--blue-glow)); width:46px; flex-shrink:0; white-space:nowrap; overflow:hidden; }
+  .bass-unit { font-size:0.5rem; color:var(--muted); width:16px; flex-shrink:0; }
+  .bass-cap { font-size:0.44rem; color:var(--muted); margin-top:4px; text-align:right; }
+
+  /* ── Presets ── */
+  .presets { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:8px; }
+  .preset-btn { background:transparent; border:1px solid var(--border); border-radius:100px; color:var(--muted);
+    cursor:pointer; font-family:'Space Mono',monospace; font-size:0.5rem; padding:3px 8px; transition:all 0.15s; }
+  .preset-btn.active,.preset-btn:hover { border-color:var(--blue); color:var(--blue); background:rgba(41,121,255,0.1); }
+
+  /* ── EQ ── */
+  .eq-wrap { display:flex; gap:3px; height:68px; align-items:stretch; position:relative; }
+  .eq-wrap::after { content:''; position:absolute; left:0; right:0; top:50%; height:1px; background:var(--border); pointer-events:none; transform:translateY(-50%); }
+  .eq-band { flex:1; display:flex; flex-direction:column; align-items:center; overflow:hidden; }
+  .eq-glabel { font-size:0.36rem; color:var(--blue); height:10px; line-height:10px; flex-shrink:0; text-align:center; }
+  .eq-track  { flex:1; width:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  input[type="range"].vsl { -webkit-appearance:none; appearance:none; writing-mode:vertical-lr; direction:rtl; width:100%; height:100%; background:transparent; cursor:pointer; }
+  input[type="range"].vsl::-webkit-slider-runnable-track { background:linear-gradient(to bottom,rgba(41,121,255,0.15),rgba(168,85,247,0.15)); width:2px; border-radius:1px; }
+  input[type="range"].vsl::-webkit-slider-thumb { -webkit-appearance:none; width:9px; height:9px; border-radius:50%; background:var(--bg); border:1.5px solid currentColor; box-shadow:0 0 5px currentColor; cursor:grab; }
+  .eq-flabel { font-size:0.34rem; color:var(--muted); height:10px; line-height:10px; flex-shrink:0; text-align:center; overflow:hidden; }
+
+  /* ── Fidelity bars ── */
+  .fb-label { font-size:0.44rem; color:var(--muted); letter-spacing:0.07em; margin-bottom:4px; }
+  .fb-row  { display:flex; gap:2px; align-items:flex-end; height:18px; }
+  .fb-bar-wrap { flex:1; height:100%; display:flex; flex-direction:column; justify-content:flex-end; }
+  .fb-bar { width:100%; min-height:2px; border-radius:1px 1px 0 0; background:rgba(0,229,255,0.15); transition:height 0.12s,background 0.12s; }
+  .fb-bar.on { background:var(--cyan); box-shadow:0 0 5px var(--cyan-glow); }
+
+  /* ── Night mode card ── */
+  .night-row { display:flex; align-items:center; justify-content:space-between; }
+  .night-left .night-title { font-family:'Orbitron',sans-serif; font-size:0.58rem; font-weight:700; letter-spacing:0.1em; }
+  .night-left .night-sub { font-size:0.46rem; color:var(--muted); margin-top:2px; }
+
+  /* ── Donate banner ── */
+  .donate-banner {
+    display: flex; gap: 11px; align-items: flex-start;
+    background: linear-gradient(135deg, rgba(41,121,255,0.07), rgba(168,85,247,0.05));
+    border-top: 1px solid var(--border);
+    padding: 14px 16px 16px;
+  }
+  .donate-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .donate-body { flex: 1; }
+  .donate-title {
+    font-family: 'Orbitron', sans-serif; font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.08em; color: var(--text); margin-bottom: 4px;
+  }
+  .donate-sub {
+    font-size: 0.5rem; color: var(--muted); line-height: 1.55; margin-bottom: 6px;
+  }
+  .donate-info {
+    font-size: 0.52rem; color: var(--blue);
+    background: rgba(41,121,255,0.08); border: 1px solid rgba(41,121,255,0.2);
+    border-radius: 8px; padding: 5px 10px; line-height: 1.5;
+  }
+
+  /* ── Lang toggle ── */
+  .lang-btn {
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted);
+    font-family: 'Space Mono', monospace; font-size: 0.48rem;
+    padding: 3px 7px; cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+  }
+  .lang-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .lang-active { border-color: var(--blue) !important; color: var(--blue) !important; background: rgba(41,121,255,0.1) !important; }
+
+  /* ── Upgrade card tabs ── */
+  .tab-btn {
+    flex:1; background:transparent; border:1px solid rgba(245,158,11,0.2);
+    border-radius:8px; color:var(--muted); cursor:pointer;
+    font-family:'Space Mono',monospace; font-size:0.48rem;
+    padding:5px 4px; transition:all 0.15s; letter-spacing:0.02em;
+  }
+  .tab-btn.active { background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.5); color:var(--gold); }
+  .tab-btn:hover:not(.active) { border-color:rgba(245,158,11,0.35); color:var(--text); }
+
+  .upload-label {
+    display:block; border:1px dashed rgba(245,158,11,0.3); border-radius:10px;
+    padding:7px 12px; font-size:0.52rem; color:var(--muted); cursor:pointer;
+    text-align:center; transition:all 0.15s;
+  }
+  .upload-label:hover { border-color:rgba(245,158,11,0.6); color:var(--gold); }
+  .upload-label.has-file { border-color:rgba(74,222,128,0.4); color:#4ade80; background:rgba(74,222,128,0.05); }
+
+  /* ── Trial banner ── */
+  .trial-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));
+    border: 1px solid rgba(245,158,11,0.35);
+    border-radius: 12px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .trial-text { font-size:0.5rem; color:var(--gold); line-height:1.5; }
+  .trial-text strong { font-family:'Orbitron',sans-serif; font-size:0.55rem; display:block; margin-bottom:1px; color:var(--gold); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="logo">Bass Boost</div>
+      <div class="logo-sub" data-i18n="logoSub">Audio Enhancer</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="status-pill">
+        <div class="sdot" id="sdot"></div>
+        <span id="statusTxt">OFFLINE</span>
+      </div>
+      <div style="display:flex;gap:3px">
+        <button id="langEN" class="lang-btn lang-active">EN</button>
+        <button id="langID" class="lang-btn">ID</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Pro status / login (shown when logged in) -->
+  <div id="proStatusBar" style="display:none" class="pro-status">
+    <div class="pro-status-left">
+      <span class="pro-crown">👑</span>
+      <div>
+        <div class="pro-status-name" data-i18n="proActive">PRO ACTIVE</div>
+        <div class="pro-status-sub" id="proStatusSub">—</div>
+      </div>
+    </div>
+    <button class="btn-signout" id="signOutBtn" data-i18n="proSignOut">Sign out</button>
+  </div>
+
+
+
+  <!-- Power -->
+  <div class="card">
+    <div class="power-row">
+      <div><div class="power-label"><span data-i18n="engineLabel">Audio Engine</span></div><div class="site-badge" id="siteBadge">—</div></div>
+      <div class="big-toggle" id="powerToggle"></div>
+    </div>
+  </div>
+
+  <div class="viz-wrap"><canvas id="viz"></canvas></div>
+
+  <!-- Volume -->
+  <div class="card">
+    <div class="sec-hd" style="margin-bottom:6px">
+      <div class="sec-title">Volume</div>
+      <span class="sl-val" id="volVal">100%</span>
+    </div>
+    <div class="sl-row">
+      <span class="sl-label">OUTPUT</span>
+      <input type="range" class="hsl" id="volSlider" min="0" max="150" value="100"
+        style="background:linear-gradient(to right,var(--blue) 66.6%,var(--border) 66.6%)">
+    </div>
+  </div>
+
+  <!-- EQ -->
+  <div class="card card-purple" style="position:relative">
+    <div id="eqLockOverlay" class="lock-overlay" style="display:none">
+      <span class="lock-icon">🔒</span>
+      <span class="lock-text">PRO FEATURE</span>
+      <span class="lock-sub">Have a key? Scroll down → paste it to unlock</span>
+    </div>
+    <div class="sec-hd">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div class="sec-title" style="color:var(--purple)" data-i18n="eqLabel">Equalizer</div>
+        <span class="pro-badge">PRO</span>
+      </div>
+    </div>
+    <div class="presets" id="presets">
+      <button class="preset-btn active" data-preset="flat">Flat</button>
+      <button class="preset-btn" data-preset="bass">Bass+</button>
+      <button class="preset-btn" data-preset="treble">Treble+</button>
+      <button class="preset-btn" data-preset="vocal">Vocal</button>
+      <button class="preset-btn" data-preset="club">Club</button>
+      <button class="preset-btn" data-preset="rock">Rock</button>
+    </div>
+    <div class="eq-wrap" id="eqBands"></div>
+  </div>
+
+  <!-- Fidelity -->
+  <div class="card card-cyan" style="position:relative">
+    <div id="fidelityLockOverlay" class="lock-overlay" style="display:none">
+      <span class="lock-icon">🔒</span>
+      <span class="lock-text">PRO FEATURE</span>
+      <span class="lock-sub">Have a key? Scroll down → paste it to unlock</span>
+    </div>
+    <div class="sec-hd">
+      <div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div class="sec-title" style="color:var(--cyan)" data-i18n="fidelityLabel">✦ Fidelity</div>
+          <span class="pro-badge">PRO</span>
+        </div>
+        <div class="sec-sub" data-i18n="fidelitySub">Boosts weak frequencies · restores balance</div>
+      </div>
+      <div class="sm-toggle" id="fidelityToggle"></div>
+    </div>
+    <div class="sl-row" style="margin-bottom:7px">
+      <span class="sl-label" data-i18n="fidelityStr">STRENGTH</span>
+      <input type="range" class="hsl" id="fidelitySlider" min="0" max="100" value="50"
+        style="background:linear-gradient(to right,var(--cyan) 50%,var(--border) 50%)">
+      <span class="sl-val sl-val-cyan" id="fidelityVal">50%</span>
+    </div>
+    <div class="fb-label" data-i18n="fidelityBands">LIVE BAND ACTIVITY</div>
+    <div class="fb-row" id="fbRow"></div>
+  </div>
+
+  <!-- Bass Boost -->
+  <div class="card card-blue">
+    <div class="sec-hd">
+      <div class="sec-title" style="color:var(--blue)" data-i18n="bassLabel">⚡ Bass Boost</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span id="bassCapLabel" class="bass-cap" style="display:none" data-i18n="bassFreeCap">FREE: max +8dB</span>
+        <div class="sm-toggle on" id="bassToggle"></div>
+      </div>
+    </div>
+    <div class="bass-row">
+      <div class="bass-num" id="bassNum">+0.0</div>
+      <input type="range" class="hsl" id="bassSlider" min="0" max="20" value="0" step="0.5"
+        style="background:linear-gradient(to right,var(--blue) 0%,var(--border) 0%);flex:1">
+      <span class="bass-unit">dB</span>
+    </div>
+  </div>
+
+  <!-- Loudness -->
+  <div class="card">
+    <div class="sec-hd">
+      <div class="sec-title" data-i18n="loudLabel">Loudness</div>
+      <div class="sm-toggle" id="loudToggle"></div>
+    </div>
+    <div class="sl-row">
+      <span class="sl-label" data-i18n="loudBoost">BOOST</span>
+      <input type="range" class="hsl" id="loudSlider" min="0" max="100" value="0"
+        style="background:linear-gradient(to right,var(--purple) 0%,var(--border) 0%)">
+      <span class="sl-val sl-val-purple" id="loudVal">0%</span>
+    </div>
+  </div>
+
+  <!-- Night Mode -->
+  <div class="card" style="position:relative">
+    <div class="night-row">
+      <div class="night-left">
+        <div class="night-title" data-i18n="nightLabel">🌙 Night Mode</div>
+        <div class="night-sub" data-i18n="nightSub">Tames loud sounds · boosts quiet ones</div>
+      </div>
+      <div class="sm-toggle" id="nightToggle"></div>
+    </div>
+  </div>
+
+  <!-- Pro Upgrade — Donate to Unlock -->
+  <div class="card card-gold" id="proUpgradeCard">
+
+    <!-- Collapsed view — full width clickable -->
+    <div id="upgradeCollapsed" style="cursor:pointer;user-select:none;-webkit-user-select:none">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="flex:1;min-width:0">
+          <div class="sec-title" style="color:var(--gold)" data-i18n="upgradeTitle">👑 Support & Unlock Pro</div>
+          <div class="sec-sub" style="margin-top:3px" data-i18n="upgradeSub">
+            Donate any amount → paste your code in the message → Pro unlocked 🎉
+          </div>
+        </div>
+        <span id="upgradeChevron" style="font-size:1rem;color:var(--gold);transition:transform 0.25s;flex-shrink:0;margin-top:2px;line-height:1">›</span>
+      </div>
+    </div>
+
+    <!-- Expanded details — hidden by default -->
+    <div id="upgradeDetails" style="display:none;margin-top:12px">
+
+      <!-- Instruction — single step only -->
+      <div style="font-size:0.49rem;color:var(--muted);line-height:1.8;margin-bottom:10px;background:rgba(245,158,11,0.05);border-radius:10px;padding:8px 10px;border:1px solid rgba(245,158,11,0.1)">
+        <span data-i18n="step3">3️⃣  Donate any amount → Pro unlocks automatically</span>
+      </div>
+
+      <!-- Two buttons side by side: Donate + Copy code -->
+      <div style="display:flex;gap:7px;margin-bottom:10px">
+        <button id="openDonatePageBtn"
+          style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+                 background:linear-gradient(135deg,#f59e0b,#d97706);
+                 border-radius:10px;padding:9px 10px;
+                 font-family:'Orbitron',sans-serif;font-size:0.56rem;font-weight:700;
+                 letter-spacing:0.05em;color:#000;border:none;cursor:pointer;
+                 box-shadow:0 0 16px rgba(245,158,11,0.3)">
+          <span data-i18n="saweriaBtn">☕ Donate</span>
+        </button>
+        <button id="copyCodeBtn"
+          style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+                 background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);
+                 border-radius:10px;padding:9px 10px;
+                 font-family:'Space Mono',monospace;font-size:0.56rem;font-weight:700;
+                 color:var(--gold);cursor:pointer;transition:all 0.2s">
+          <span id="copyCodeBtnText" data-i18n="copyCodeBtn">📋 Copy Code</span>
+        </button>
+      </div>
+
+      <div style="border-top:1px solid rgba(245,158,11,0.15);margin:10px 0"></div>
+
+      <!-- Already have a code -->
+      <div style="font-size:0.48rem;color:var(--muted);margin-bottom:5px;letter-spacing:0.04em" data-i18n="haveKey">ALREADY HAVE A KEY?</div>
+      <div class="pro-key-row">
+        <input type="text" id="proKeyInput" placeholder="BAS-XXXXX" style="letter-spacing:2px;font-family:monospace;text-transform:uppercase">
+        <button class="btn-verify" id="proVerifyBtn" data-i18n="verifyBtn">Verify</button>
+      </div>
+      <div class="pro-msg inf" id="proMsg" style="margin-top:4px"></div>
+
+      <div style="border-top:1px solid rgba(245,158,11,0.15);margin:10px 0"></div>
+
+      <!-- Free trial -->
+      <div style="font-size:0.5rem;color:var(--muted);line-height:1.5;margin-bottom:6px">
+        <span data-i18n="trialPrompt">Not ready? Try Pro free for</span>
+        <strong style="color:var(--gold)" data-i18n="trialDays"> 3 days</strong>
+        <span data-i18n="trialSuffix"> — just enter your email.</span>
+      </div>
+      <div class="pro-email-row">
+        <input type="email" id="trialEmail" placeholder="your@email.com">
+        <button class="btn-verify" id="trialSubmitBtn" data-i18n="tryFreeBtn">Try Free →</button>
+      </div>
+      <div class="pro-msg inf" id="trialMsg" style="margin-top:4px"></div>
+    </div>
+
+    <!-- Trial active banner — shown inside card when on trial -->
+    <div id="trialBanner" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(245,158,11,0.15)">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span style="font-size:0.5rem;color:var(--gold);font-weight:700" data-i18n="trialActive">🎉 Free Trial active</span>
+        <span style="font-size:0.46rem;color:var(--muted)" id="trialDaysLeft">3 days remaining</span>
+        <span style="font-size:0.46rem;color:var(--muted)">·</span>
+        <a id="donateToUpgradeBtn"
+          style="font-size:0.46rem;color:var(--gold);text-decoration:none;
+                 border-bottom:1px solid rgba(245,158,11,0.4);line-height:1.2;cursor:pointer"
+          data-i18n="donateUpgrade">Donate to Upgrade</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Donate banner — shown during auto trial -->
+<div id="donateBanner" style="display:none">
+  <div class="donate-banner">
+    <div class="donate-icon">💙</div>
+    <div class="donate-body">
+      <div class="donate-title">Enjoying BassBoost Eq?</div>
+      <div class="donate-sub">For unlimited access, please support the developer — donate any amount you like.</div>
+      <div class="donate-info" id="donateInfo">Payment info will be provided soon.</div>
+    </div>
+  </div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

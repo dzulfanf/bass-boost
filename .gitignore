@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Node (untuk backend nanti)
+node_modules/
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# Build
+dist/
+*.crx
+*.pem
