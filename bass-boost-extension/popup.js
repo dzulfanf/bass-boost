@@ -27,14 +27,12 @@ const STRINGS = {
     loudLabel:      'Loudness',
     loudBoost:      'BOOST',
     upgradeTitle:   '👑 Support & Unlock Pro',
-    upgradeSub:     'Donate any amount → paste your code in the message → Pro unlocked 🎉',
+    upgradeSub:     'Donate any amount on Saweria → Pro unlocked 🎉',
     step1:          '1️⃣  Click "Get My Code" — a unique code is generated',
     step2_bold:     'Paste the code',
     step2_suffix:   'in the Saweria donation message field',
-    step3:          'Donate any amount → Pro unlocks automatically',
-    saweriaBtn:     '☕ Donate',
-    copyCodeBtn:    '📋 Copy Code',
-    copyCodeDone:   '✓ Copied!',
+    step3:          'Click Donate → copy your code → paste it in Saweria 🎉',
+    saweriaBtn:     'Donate',
     haveKey:        'ALREADY HAVE A KEY?',
     keyPlaceholder: 'BOOM-XXXXXX-XXXXXX-XXXXXX',
     verifyBtn:      'Verify',
@@ -83,14 +81,12 @@ const STRINGS = {
     loudLabel:      'Kenyaringan',
     loudBoost:      'BOOST',
     upgradeTitle:   '👑 Dukung & Buka Pro',
-    upgradeSub:     'Donasi berapa aja → tempel kode di pesan → Pro langsung aktif 🎉',
+    upgradeSub:     'Donasi berapa aja di Saweria → Pro langsung aktif 🎉',
     step1:          '1️⃣  Klik "Buat Kode Saya" — kode unik dibuat untukmu',
     step2_bold:     'Tempel kode',
     step2_suffix:   'di kolom pesan donasi Saweria',
-    step3:          'Donasi berapa saja → Pro aktif otomatis',
-    saweriaBtn:     '☕ Donasi',
-    copyCodeBtn:    '📋 Salin Kode',
-    copyCodeDone:   '✓ Disalin!',
+    step3:          'Klik Donasi → salin kode → tempel di Saweria 🎉',
+    saweriaBtn:     'Donasi',
     haveKey:        'SUDAH PUNYA KUNCI?',
     keyPlaceholder: 'BOOM-XXXXXX-XXXXXX-XXXXXX',
     verifyBtn:      'Verifikasi',
@@ -310,10 +306,9 @@ chrome.storage.local.get('bbDeviceId', data => {
 
 // ── Open donate landing page ──────────────────────────────────────
 document.getElementById('openDonatePageBtn').addEventListener('click', () => {
-  // donate.html is served by the backend
-  const donateUrl = `${API}/donate`;
+  const extId = chrome.runtime.id;
+  const donateUrl = `${API}/donate?device_id=${encodeURIComponent(deviceId)}&lang=${lang}&ext_id=${encodeURIComponent(extId)}`;
   chrome.tabs.create({ url: donateUrl });
-  // Start polling — user will return after donating
   startUnlockPolling();
 });
 
@@ -359,49 +354,7 @@ function startUnlockPolling() {
 }
 
 
-// ── Copy Code button — generates a code and copies to clipboard ───
-document.getElementById('copyCodeBtn').addEventListener('click', async () => {
-  const btn     = document.getElementById('copyCodeBtn');
-  const btnText = document.getElementById('copyCodeBtnText');
-  btn.disabled = true;
-  btnText.textContent = '...';
-
-  try {
-    const res  = await fetch(`${API}/generate-code`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ source: 'bassboost' }),
-    });
-    const data = await res.json();
-    if (!data.ok || !data.code) throw new Error('No code');
-
-    await navigator.clipboard.writeText(data.code);
-
-    // Save generated code so verify field can use it
-    document.getElementById('proKeyInput').value = data.code;
-
-    btnText.textContent = t.copyCodeDone;
-    btn.style.background = 'rgba(74,222,128,0.1)';
-    btn.style.borderColor = 'rgba(74,222,128,0.35)';
-    btn.style.color = '#4ade80';
-
-    // Reset after 3s
-    setTimeout(() => {
-      btnText.textContent = t.copyCodeBtn;
-      btn.style.background = '';
-      btn.style.borderColor = '';
-      btn.style.color = '';
-      btn.disabled = false;
-    }, 3000);
-
-  } catch (e) {
-    btnText.textContent = lang === 'id' ? 'Gagal, coba lagi' : 'Failed, try again';
-    btn.disabled = false;
-    setTimeout(() => { btnText.textContent = t.copyCodeBtn; }, 2000);
-  }
-});
-
-
+function toggleDonateDetails(forceOpen) {
   const details = document.getElementById('upgradeDetails');
   const chevron = document.getElementById('upgradeChevron');
   const isOpen  = details.style.display !== 'none';
