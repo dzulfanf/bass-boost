@@ -4,221 +4,164 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bass Boost Pro — Donate</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#03050d;--card:#090e1c;--border:#141d35;--blue:#2979ff;--purple:#a855f7;--gold:#f59e0b;--text:#d0daf5;--muted:#5a6f9a;--green:#4ade80}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(41,121,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(41,121,255,.015) 1px,transparent 1px);background-size:32px 32px}
-.card{position:relative;z-index:1;width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px 28px;box-shadow:0 28px 80px rgba(0,0,0,.6),0 0 40px rgba(41,121,255,.07)}
-.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.1rem;letter-spacing:3px;text-align:center;margin-bottom:6px;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.subtitle{text-align:center;color:var(--gold);font-size:.85rem;font-weight:500;margin-bottom:28px}
-.label{font-size:.75rem;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
-.code-box{display:flex;align-items:center;gap:8px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px 16px;margin-bottom:20px}
-.code-text{flex:1;font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--gold);letter-spacing:2px;word-break:break-all}
-.btn-copy{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:8px 12px;cursor:pointer;color:var(--gold);font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:600;display:flex;align-items:center;gap:4px;transition:all .2s;white-space:nowrap}
-.btn-copy:hover{background:rgba(245,158,11,.25)}
-.btn-copy.copied{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);color:var(--green)}
-.steps{margin-bottom:24px;padding:0;list-style:none;counter-reset:step}
-.steps li{counter-increment:step;font-size:.82rem;color:var(--muted);padding:6px 0;padding-left:28px;position:relative;line-height:1.5}
-.steps li::before{content:counter(step);position:absolute;left:0;top:6px;width:20px;height:20px;background:rgba(41,121,255,.1);border:1px solid rgba(41,121,255,.25);border-radius:50%;font-size:.65rem;font-weight:700;color:var(--blue);display:flex;align-items:center;justify-content:center}
-.btn-saweria{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#f59e0b,#d97706);border:none;border-radius:12px;padding:14px;font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.05em;color:#000;cursor:pointer;box-shadow:0 0 20px rgba(245,158,11,.3);transition:filter .2s;text-decoration:none;margin-bottom:20px}
-.btn-saweria:hover{filter:brightness(1.1)}
-.status{text-align:center;font-size:.8rem;color:var(--muted);min-height:24px}
-.status.success{color:var(--green);font-weight:600}
-.status .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
+body{font-family:'DM Sans',sans-serif;background:#03050d;color:#d0daf5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{width:100%;max-width:400px}
+.title{font-size:1rem;font-weight:600;color:#5a6f9a;letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-bottom:32px}
+.code-label{font-size:.72rem;color:#5a6f9a;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.code-box{background:#0d1424;border:1px solid rgba(245,158,11,.25);border-radius:14px;padding:20px;margin-bottom:12px}
+.code-value{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:#f59e0b;letter-spacing:3px;text-align:center;margin-bottom:16px;min-height:1.8rem}
+.code-value.loading{color:#2a3a5c;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.btn-copy{width:100%;background:linear-gradient(135deg,#f59e0b,#d97706);border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;color:#000;cursor:pointer;transition:filter .15s,transform .1s}
+.btn-copy:hover{filter:brightness(1.08)}
+.btn-copy:active{transform:scale(.98)}
+.btn-copy:disabled{background:#1a2440;color:#3a4f70;cursor:not-allowed}
+.btn-copy.copied{background:linear-gradient(135deg,#4ade80,#22c55e)}
+.divider{border:none;border-top:1px solid #141d35;margin:24px 0}
+.steps{list-style:none;counter-reset:s;margin-bottom:24px}
+.steps li{counter-increment:s;font-size:.84rem;color:#5a6f9a;padding:5px 0 5px 28px;position:relative;line-height:1.5}
+.steps li::before{content:counter(s);position:absolute;left:0;top:5px;width:18px;height:18px;background:#0d1424;border:1px solid #1e2d50;border-radius:50%;font-size:.65rem;font-weight:700;color:#2979ff;display:flex;align-items:center;justify-content:center}
+.btn-saweria{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#0d1424;border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:13px;font-size:.9rem;font-weight:500;color:#f59e0b;cursor:pointer;text-decoration:none;transition:background .15s;margin-bottom:20px}
+.btn-saweria:hover{background:#111b30}
+.status{text-align:center;font-size:.82rem;color:#5a6f9a;min-height:22px;display:flex;align-items:center;justify-content:center;gap:6px}
+.status.success{color:#4ade80;font-weight:600}
+.spinner{width:13px;height:13px;border:2px solid #1a2440;border-top-color:#f59e0b;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.error{text-align:center;font-size:.78rem;color:#f87171;margin-bottom:16px}
+.error{font-size:.78rem;color:#f87171;text-align:center;margin-bottom:12px}
 </style>
 </head>
 <body>
-
 <div class="card">
-  <div class="logo">BASS BOOST</div>
-  <div class="subtitle" id="pageSubtitle">Pro Upgrade</div>
+  <p class="title" id="pageTitle">Unlock Pro</p>
 
-  <div class="label" id="codeLabel">YOUR DONATION CODE</div>
+  <p class="code-label" id="codeLabel">Your Donation Code</p>
   <div class="code-box">
-    <span class="code-text" id="codeText">...</span>
-    <button class="btn-copy" id="copyBtn" disabled>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/></svg>
-      <span id="copyBtnText">Copy</span>
-    </button>
+    <div class="code-value loading" id="codeValue">generating...</div>
+    <button class="btn-copy" id="copyBtn" disabled>Copy Code</button>
   </div>
 
   <div class="error" id="errorMsg" style="display:none"></div>
 
-  <ol class="steps" id="stepsList">
+  <hr class="divider">
+
+  <ol class="steps">
     <li id="s1">Copy the code above</li>
     <li id="s2">Click "Go to Saweria" below</li>
-    <li id="s3">Paste the code in the donation message</li>
-    <li id="s4">Donate any amount</li>
+    <li id="s3">Paste code in the donation message</li>
+    <li id="s4">Donate any amount — Pro unlocks instantly</li>
   </ol>
 
-  <a class="btn-saweria" id="saweriaLink" href="https://saweria.co/dzulfanDev" target="_blank" rel="noopener">
+  <a class="btn-saweria" id="saweriaBtn" href="https://saweria.co/dzulfanDev" target="_blank" rel="noopener">
     ☕ <span id="saweriaText">Go to Saweria</span>
   </a>
 
   <div class="status" id="statusMsg">
-    <span class="spinner"></span> <span id="statusText">Waiting for donation...</span>
+    <span class="spinner"></span>
+    <span id="statusText">Waiting for donation...</span>
   </div>
 </div>
 
 <script>
-// ── Config ──────────────────────────────────────────────────────
-const API = 'https://your-boom-backend.vercel.app'; // TODO: update after deploy
-const SAWERIA_URL = 'https://saweria.co/dzulfanDev';
+const API = 'https://bass-boost-backend.vercel.app/api';
 const POLL_INTERVAL = 5000;
-const POLL_TIMEOUT = 15 * 60 * 1000;
+const POLL_TIMEOUT  = 15 * 60 * 1000;
 
-// ── Read URL params ─────────────────────────────────────────────
-const params = new URLSearchParams(window.location.search);
+const params   = new URLSearchParams(window.location.search);
 const deviceId = params.get('device_id') || '';
-const lang = params.get('lang') || 'en';
-const extId = params.get('ext_id') || '';
+const lang     = params.get('lang') || 'en';
+const extId    = params.get('ext_id') || '';
 
-// ── i18n ────────────────────────────────────────────────────────
-const STRINGS = {
-  en: {
-    subtitle: 'Pro Upgrade',
-    codeLabel: 'YOUR DONATION CODE',
-    copy: 'Copy',
-    copied: 'Copied!',
-    s1: 'Copy the code above',
-    s2: 'Click "Go to Saweria" below',
-    s3: 'Paste the code in the donation message',
-    s4: 'Donate any amount',
-    saweria: 'Go to Saweria',
-    waiting: 'Waiting for donation...',
-    success: 'Pro unlocked! You can close this tab.',
-    genError: 'Could not generate code. Using a temporary code — please try again later.',
-    fallbackNote: 'Temporary code (backend not available)',
-  },
-  id: {
-    subtitle: 'Upgrade Pro',
-    codeLabel: 'KODE DONASI KAMU',
-    copy: 'Salin',
-    copied: 'Disalin!',
-    s1: 'Salin kode di atas',
-    s2: 'Klik "Ke Saweria" di bawah',
-    s3: 'Tempel kode di pesan donasi',
-    s4: 'Donasi berapa saja',
-    saweria: 'Ke Saweria',
-    waiting: 'Menunggu donasi...',
-    success: 'Pro aktif! Kamu bisa tutup tab ini.',
-    genError: 'Gagal membuat kode. Menggunakan kode sementara — coba lagi nanti.',
-    fallbackNote: 'Kode sementara (backend belum tersedia)',
-  },
+const id = s => document.getElementById(s);
+
+// i18n
+if (lang === 'id') {
+  id('pageTitle').textContent    = 'Aktifkan Pro';
+  id('codeLabel').textContent    = 'Kode Donasi Kamu';
+  id('copyBtn').textContent      = 'Salin Kode';
+  id('s1').textContent           = 'Salin kode di atas';
+  id('s2').textContent           = 'Klik "Ke Saweria" di bawah';
+  id('s3').textContent           = 'Tempel kode di pesan donasi';
+  id('s4').textContent           = 'Donasi berapa saja — Pro langsung aktif';
+  id('saweriaText').textContent  = 'Ke Saweria';
+  id('statusText').textContent   = 'Menunggu donasi...';
+}
+
+const T = {
+  copied:  lang === 'id' ? 'Tersalin!' : 'Copied!',
+  copy:    lang === 'id' ? 'Salin Kode' : 'Copy Code',
+  success: lang === 'id' ? '✓ Pro aktif! Kamu bisa tutup tab ini.' : '✓ Pro unlocked! You can close this tab.',
+  error:   lang === 'id' ? 'Gagal membuat kode. Coba lagi nanti.' : 'Could not generate code. Try again later.',
 };
-const t = STRINGS[lang] || STRINGS.en;
 
-// ── Apply i18n ──────────────────────────────────────────────────
-document.documentElement.lang = lang;
-document.getElementById('pageSubtitle').textContent = t.subtitle;
-document.getElementById('codeLabel').textContent = t.codeLabel;
-document.getElementById('copyBtnText').textContent = t.copy;
-document.getElementById('s1').textContent = t.s1;
-document.getElementById('s2').textContent = t.s2;
-document.getElementById('s3').textContent = t.s3;
-document.getElementById('s4').textContent = t.s4;
-document.getElementById('saweriaText').textContent = t.saweria;
-document.getElementById('statusText').textContent = t.waiting;
-
-// ── State ───────────────────────────────────────────────────────
 let generatedCode = '';
 let pollTimer = null;
 
-// ── Generate code ───────────────────────────────────────────────
-async function generateCode() {
+// Generate code on load
+(async () => {
   try {
-    const res = await fetch(`${API}/generate-code`, {
+    const res  = await fetch(`${API}/generate-code`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ source: 'bassboost', device_id: deviceId }),
+      body: JSON.stringify({ source: 'bassboost', device_id: deviceId || 'anonymous' }),
     });
     const data = await res.json();
-    if (!data.ok || !data.code) throw new Error('No code returned');
-    return data.code;
-  } catch (e) {
-    // Fallback: generate client-side code
-    const hex = () => Math.random().toString(16).slice(2, 7).toUpperCase();
-    document.getElementById('errorMsg').textContent = t.genError;
-    document.getElementById('errorMsg').style.display = 'block';
-    return `BAS-${hex()}-${hex()}`;
+    if (!data.ok || !data.code) throw new Error();
+    generatedCode = data.code;
+  } catch {
+    // Client-side fallback
+    const r = () => Math.random().toString(36).slice(2,6).toUpperCase();
+    generatedCode = `BAS-${r()}-${r()}`;
+    id('errorMsg').textContent    = T.error;
+    id('errorMsg').style.display  = 'block';
   }
-}
-
-// ── Init ────────────────────────────────────────────────────────
-(async () => {
-  generatedCode = await generateCode();
-  document.getElementById('codeText').textContent = generatedCode;
-  document.getElementById('copyBtn').disabled = false;
+  const cv = id('codeValue');
+  cv.textContent = generatedCode;
+  cv.classList.remove('loading');
+  id('copyBtn').disabled = false;
   startPolling();
 })();
 
-// ── Copy button ─────────────────────────────────────────────────
-document.getElementById('copyBtn').addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(generatedCode);
-  } catch {
-    // Fallback for non-secure contexts
+// Copy
+id('copyBtn').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(generatedCode); }
+  catch {
     const ta = document.createElement('textarea');
     ta.value = generatedCode;
-    document.body.appendChild(ta);
-    ta.select();
+    document.body.appendChild(ta); ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
   }
-  const btn = document.getElementById('copyBtn');
-  const txt = document.getElementById('copyBtnText');
-  btn.classList.add('copied');
-  txt.textContent = t.copied;
+  id('copyBtn').textContent = T.copied;
+  id('copyBtn').classList.add('copied');
   setTimeout(() => {
-    btn.classList.remove('copied');
-    txt.textContent = t.copy;
+    id('copyBtn').textContent = T.copy;
+    id('copyBtn').classList.remove('copied');
   }, 2000);
 });
 
-// ── Poll for payment ────────────────────────────────────────────
+// Poll
 function startPolling() {
   if (pollTimer) return;
   pollTimer = setInterval(async () => {
     try {
-      const res = await fetch(`${API}/check-code?code=${encodeURIComponent(generatedCode)}`);
+      const res  = await fetch(`${API}/check-code?code=${encodeURIComponent(generatedCode)}`);
       const data = await res.json();
-      if (data.ok && data.paid) {
-        clearInterval(pollTimer);
-        pollTimer = null;
-        onUnlocked();
-      }
-    } catch {
-      // Silently retry
-    }
+      if (data.ok && data.paid) { clearInterval(pollTimer); pollTimer = null; onUnlocked(); }
+    } catch {}
   }, POLL_INTERVAL);
-  // Stop after timeout
-  setTimeout(() => {
-    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-  }, POLL_TIMEOUT);
+  setTimeout(() => { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }, POLL_TIMEOUT);
 }
 
-// ── Unlock success ──────────────────────────────────────────────
 function onUnlocked() {
-  const statusEl = document.getElementById('statusMsg');
-  statusEl.className = 'status success';
-  statusEl.textContent = '✓ ' + t.success;
-
-  // Notify extension background.js
+  const s = id('statusMsg');
+  s.className = 'status success';
+  s.innerHTML = T.success;
   if (extId) {
-    try {
-      chrome.runtime.sendMessage(extId, {
-        type: 'BB_UNLOCKED',
-        code: generatedCode,
-        deviceId: deviceId,
-      });
-    } catch {
-      // Extension may not be reachable
-    }
+    try { chrome.runtime.sendMessage(extId, { type: 'BB_UNLOCKED', code: generatedCode, deviceId }); }
+    catch {}
   }
 }
 </script>
