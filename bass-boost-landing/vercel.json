@@ -5,7 +5,6 @@
     { "src": "donate.html", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/donate", "dest": "/donate.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/donate", "dest": "/donate.html" }
   ]
 }

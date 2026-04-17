@@ -1,7 +1,8 @@
 // popup.js — Bass Boost
 
 // ── Config ───────────────────────────────────────────────────────
-const API = 'https://your-boom-backend.vercel.app'; // TODO: update after deploy
+const API = 'https://bass-boost-backend.vercel.app/api';
+const LANDING = 'https://bass-boost-landing.vercel.app';
 
 // ── i18n ─────────────────────────────────────────────────────────
 const STRINGS = {
@@ -307,7 +308,7 @@ chrome.storage.local.get('bbDeviceId', data => {
 // ── Open donate landing page ──────────────────────────────────────
 document.getElementById('openDonatePageBtn').addEventListener('click', () => {
   const extId = chrome.runtime.id;
-  const donateUrl = `${API}/donate?device_id=${encodeURIComponent(deviceId)}&lang=${lang}&ext_id=${encodeURIComponent(extId)}`;
+  const donateUrl = `${LANDING}/donate.html?device_id=${encodeURIComponent(deviceId)}&lang=${lang}&ext_id=${encodeURIComponent(extId)}`;
   chrome.tabs.create({ url: donateUrl });
   startUnlockPolling();
 });
@@ -388,7 +389,7 @@ document.getElementById('fidelityLockOverlay').addEventListener('click', scrollT
 
 // "Donate to Upgrade" in trial banner — open donate flow page
 document.getElementById('donateToUpgradeBtn').addEventListener('click', () => {
-  const donateUrl = `${API}/donate`;
+  const donateUrl = `${LANDING}/donate.html`;
   chrome.tabs.create({ url: donateUrl });
   startUnlockPolling();
 });
