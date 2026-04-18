@@ -13,10 +13,12 @@
   "host_permissions": ["<all_urls>"],
   "externally_connectable": {
     "matches": [
-      "https://*.railway.app/*",
-      "https://*.vercel.app/*",
+      "https://bass-boost-landing.vercel.app/*",
       "http://localhost:3000/*"
     ]
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'self';"
   },
   "action": {
     "default_popup": "popup.html",

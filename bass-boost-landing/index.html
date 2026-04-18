@@ -133,7 +133,7 @@ footer{border-top:1px solid var(--border);padding:28px 32px;display:flex;align-i
       <button class="lang-btn active" id="siteEN" onclick="siteLang('en')">EN</button>
       <button class="lang-btn" id="siteID" onclick="siteLang('id')">ID</button>
     </div>
-    <a href="https://chrome.google.com/webstore" class="btn-nav" data-i18n="navCta" target="_blank">Add to Chrome — Free</a>
+    <a href="https://chrome.google.com/webstore" class="btn-nav" data-i18n="navCta" target="_blank" rel="noopener noreferrer">Add to Chrome — Free</a>
   </div>
 </nav>
 
@@ -145,8 +145,8 @@ footer{border-top:1px solid var(--border);padding:28px 32px;display:flex;align-i
   <h1><span data-i18n="heroH1a">Hear every song</span><br><span data-i18n="heroH1b">the way it </span><span class="grad" data-i18n="heroH1c">should sound</span></h1>
   <p data-i18n="heroSub">Bass boost, 10-band EQ, Fidelity engine and Night Mode — for YouTube, Spotify, Netflix and any site in Chrome.</p>
   <div class="hero-btns">
-    <a href="https://chrome.google.com/webstore" class="btn-primary" data-i18n="heroCta" target="_blank">⬇ Add to Chrome — free</a>
-    <a href="#pricing" class="btn-ghost" data-i18n="heroSecondary" target="_blank">Support the project ☕</a>
+    <a href="https://chrome.google.com/webstore" class="btn-primary" data-i18n="heroCta" target="_blank" rel="noopener noreferrer">⬇ Add to Chrome — free</a>
+    <a href="#pricing" class="btn-ghost" data-i18n="heroSecondary">Support the project ☕</a>
   </div>
   <div class="mockup">
     <div class="mbar">
@@ -223,7 +223,7 @@ footer{border-top:1px solid var(--border);padding:28px 32px;display:flex;align-i
         <li class="dim" data-i18n="fl6">Fidelity Engine</li>
         <li class="dim" data-i18n="fl7">Full Bass Boost (+20dB)</li>
       </ul>
-      <a href="https://chrome.google.com/webstore" class="bcta install" data-i18n="installBtn" target="_blank">Add to Chrome</a>
+      <a href="https://chrome.google.com/webstore" class="bcta install" data-i18n="installBtn" target="_blank" rel="noopener noreferrer">Add to Chrome</a>
     </div>
     <div class="pcard pro">
       <div class="pname" style="color:var(--gold)" data-i18n="proLabel">👑 Pro</div>
@@ -236,7 +236,7 @@ footer{border-top:1px solid var(--border);padding:28px 32px;display:flex;align-i
         <li class="pro-item" data-i18n="pl5">Lifetime key — no expiry</li>
         <li class="pro-item" data-i18n="pl6">Key delivered instantly by email</li>
       </ul>
-      <a href="https://saweria.co/dzulfanDev" class="bcta donate" data-i18n="donateBtn" target="_blank">☕ Donate via Saweria</a>
+      <a href="https://saweria.co/dzulfanDev" class="bcta donate" data-i18n="donateBtn" target="_blank" rel="noopener noreferrer">☕ Donate via Saweria</a>
       <p style="font-size:.68rem;color:var(--muted);margin-top:10px;text-align:center;line-height:1.6" data-i18n="donateNote">
         Type your email in the Saweria message field.<br>Your key arrives automatically — no manual steps.
       </p>
@@ -259,7 +259,7 @@ footer{border-top:1px solid var(--border);padding:28px 32px;display:flex;align-i
 
 <footer>
   <div class="logo" style="font-size:.82rem">Bass Boost</div>
-  <div>Built by <a href="https://saweria.co/dzulfanDev" style="color:var(--muted);text-decoration:none" target="_blank">dzulfanDev</a></div>
+  <div>Built by <a href="https://saweria.co/dzulfanDev" style="color:var(--muted);text-decoration:none" target="_blank" rel="noopener noreferrer">dzulfanDev</a></div>
   <div data-i18n="footerNote">Chrome Extension · Free</div>
 </footer>
 
@@ -291,7 +291,7 @@ const SITE_STRINGS = {
     pl1:'Everything in Free', pl2:'Full Bass Boost (up to +20dB)', pl3:'10-Band EQ + 6 Presets',
     pl4:'Fidelity Engine', pl5:'Lifetime key — no expiry', pl6:'Key delivered instantly by email',
     installBtn:'Add to Chrome', donateBtn:'☕ Donate via Saweria',
-    donateNote:'Type your email in the Saweria message field.<br>Your key arrives automatically — no manual steps.',
+    donateNote:'Type your email in the Saweria message field. Your key arrives automatically — no manual steps.',
     faqEyebrow:'FAQ', faqTitle:'Common questions',
     q1:'Does it work on YouTube and Spotify?', a1:'Yes — it works on any site that plays audio through HTML5 media. YouTube, Spotify Web, Netflix, Twitch, SoundCloud and more.',
     q2:'How does the Saweria Pro unlock work?', a2:'Donate any amount on Saweria and type your email in the message/note field. The server receives the donation via webhook, generates a lifetime key, and emails it to you within seconds. Paste it in the extension to unlock Pro.',
@@ -326,7 +326,7 @@ const SITE_STRINGS = {
     pl1:'Semua fitur Gratis', pl2:'Full Bass Boost (hingga +20dB)', pl3:'EQ 10-Band + 6 Preset',
     pl4:'Fidelity Engine', pl5:'Kunci seumur hidup — tidak kedaluwarsa', pl6:'Kunci dikirim instan ke email',
     installBtn:'Tambah ke Chrome', donateBtn:'☕ Donasi via Saweria',
-    donateNote:'Ketik emailmu di kolom pesan Saweria.<br>Kuncimu tiba otomatis — tanpa langkah manual.',
+    donateNote:'Ketik emailmu di kolom pesan Saweria. Kuncimu tiba otomatis — tanpa langkah manual.',
     faqEyebrow:'FAQ', faqTitle:'Pertanyaan umum',
     q1:'Apakah berfungsi di YouTube dan Spotify?', a1:'Ya — berfungsi di situs apapun yang memutar audio melalui HTML5. YouTube, Spotify Web, Netflix, Twitch, SoundCloud dan lainnya.',
     q2:'Bagaimana cara unlock Pro via Saweria?', a2:'Donasi berapa saja di Saweria dan ketik emailmu di kolom pesan. Server menerima donasi via webhook, menghasilkan kunci seumur hidup, dan mengirimkannya dalam hitungan detik. Tempel di ekstensi untuk membuka Pro.',
@@ -345,7 +345,7 @@ function siteLang(l) {
   const s = SITE_STRINGS[l];
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
-    if (s[key] !== undefined) el.innerHTML = s[key];
+    if (s[key] !== undefined) el.textContent = s[key];
   });
   document.getElementById('siteEN').classList.toggle('active', l === 'en');
   document.getElementById('siteID').classList.toggle('active', l === 'id');
