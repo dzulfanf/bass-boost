@@ -3,7 +3,7 @@ const POLL_INTERVAL = 5000;
 const POLL_TIMEOUT  = 15 * 60 * 1000;
 
 // Extension ID — must match the published extension
-const EXT_ID = 'YOUR_EXTENSION_ID_HERE';
+const EXT_ID = 'ookejljgikciafjcgoinmlohggblmljo';
 
 const lang = new URLSearchParams(window.location.search).get('lang') || 'en';
 
