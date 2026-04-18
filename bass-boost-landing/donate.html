@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://bass-boost-backend.vercel.app; img-src 'self'; base-uri 'self'; frame-ancestors 'none';">
 <title>Bass Boost Pro — Donate</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -54,7 +55,7 @@ body{font-family:'DM Sans',sans-serif;background:#03050d;color:#d0daf5;min-heigh
     <li id="s4">Donate any amount — Pro unlocks instantly</li>
   </ol>
 
-  <a class="btn-saweria" id="saweriaBtn" href="https://saweria.co/dzulfanDev" target="_blank" rel="noopener">
+  <a class="btn-saweria" id="saweriaBtn" href="https://saweria.co/dzulfanDev" target="_blank" rel="noopener noreferrer">
     ☕ <span id="saweriaText">Go to Saweria</span>
   </a>
 
@@ -64,106 +65,6 @@ body{font-family:'DM Sans',sans-serif;background:#03050d;color:#d0daf5;min-heigh
   </div>
 </div>
 
-<script>
-const API = 'https://bass-boost-backend.vercel.app/api';
-const POLL_INTERVAL = 5000;
-const POLL_TIMEOUT  = 15 * 60 * 1000;
-
-const params   = new URLSearchParams(window.location.search);
-const deviceId = params.get('device_id') || '';
-const lang     = params.get('lang') || 'en';
-const extId    = params.get('ext_id') || '';
-
-const id = s => document.getElementById(s);
-
-// i18n
-if (lang === 'id') {
-  id('pageTitle').textContent    = 'Aktifkan Pro';
-  id('codeLabel').textContent    = 'Kode Donasi Kamu';
-  id('copyBtn').textContent      = 'Salin Kode';
-  id('s1').textContent           = 'Salin kode di atas';
-  id('s2').textContent           = 'Klik "Ke Saweria" di bawah';
-  id('s3').textContent           = 'Tempel kode di pesan donasi';
-  id('s4').textContent           = 'Donasi berapa saja — Pro langsung aktif';
-  id('saweriaText').textContent  = 'Ke Saweria';
-  id('statusText').textContent   = 'Menunggu donasi...';
-}
-
-const T = {
-  copied:  lang === 'id' ? 'Tersalin!' : 'Copied!',
-  copy:    lang === 'id' ? 'Salin Kode' : 'Copy Code',
-  success: lang === 'id' ? '✓ Pro aktif! Kamu bisa tutup tab ini.' : '✓ Pro unlocked! You can close this tab.',
-  error:   lang === 'id' ? 'Gagal membuat kode. Coba lagi nanti.' : 'Could not generate code. Try again later.',
-};
-
-let generatedCode = '';
-let pollTimer = null;
-
-// Generate code on load
-(async () => {
-  try {
-    const res  = await fetch(`${API}/generate-code`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ source: 'bassboost', device_id: deviceId || 'anonymous' }),
-    });
-    const data = await res.json();
-    if (!data.ok || !data.code) throw new Error();
-    generatedCode = data.code;
-  } catch {
-    // Client-side fallback
-    const r = () => Math.random().toString(36).slice(2,6).toUpperCase();
-    generatedCode = `BAS-${r()}-${r()}`;
-    id('errorMsg').textContent    = T.error;
-    id('errorMsg').style.display  = 'block';
-  }
-  const cv = id('codeValue');
-  cv.textContent = generatedCode;
-  cv.classList.remove('loading');
-  id('copyBtn').disabled = false;
-  startPolling();
-})();
-
-// Copy
-id('copyBtn').addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText(generatedCode); }
-  catch {
-    const ta = document.createElement('textarea');
-    ta.value = generatedCode;
-    document.body.appendChild(ta); ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-  }
-  id('copyBtn').textContent = T.copied;
-  id('copyBtn').classList.add('copied');
-  setTimeout(() => {
-    id('copyBtn').textContent = T.copy;
-    id('copyBtn').classList.remove('copied');
-  }, 2000);
-});
-
-// Poll
-function startPolling() {
-  if (pollTimer) return;
-  pollTimer = setInterval(async () => {
-    try {
-      const res  = await fetch(`${API}/check-code?code=${encodeURIComponent(generatedCode)}`);
-      const data = await res.json();
-      if (data.ok && data.paid) { clearInterval(pollTimer); pollTimer = null; onUnlocked(); }
-    } catch {}
-  }, POLL_INTERVAL);
-  setTimeout(() => { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }, POLL_TIMEOUT);
-}
-
-function onUnlocked() {
-  const s = id('statusMsg');
-  s.className = 'status success';
-  s.innerHTML = T.success;
-  if (extId) {
-    try { chrome.runtime.sendMessage(extId, { type: 'BB_UNLOCKED', code: generatedCode, deviceId }); }
-    catch {}
-  }
-}
-</script>
+<script src="donate.js"></script>
 </body>
 </html>

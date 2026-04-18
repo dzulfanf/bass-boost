@@ -307,8 +307,7 @@ chrome.storage.local.get('bbDeviceId', data => {
 
 // ── Open donate landing page ──────────────────────────────────────
 document.getElementById('openDonatePageBtn').addEventListener('click', () => {
-  const extId = chrome.runtime.id;
-  const donateUrl = `${LANDING}/donate.html?device_id=${encodeURIComponent(deviceId)}&lang=${lang}&ext_id=${encodeURIComponent(extId)}`;
+  const donateUrl = `${LANDING}/donate.html?lang=${lang}`;
   chrome.tabs.create({ url: donateUrl });
   startUnlockPolling();
 });
@@ -398,12 +397,6 @@ document.getElementById('donateToUpgradeBtn').addEventListener('click', () => {
 document.getElementById('langEN').addEventListener('click', () => setLang('en'));
 document.getElementById('langID').addEventListener('click', () => setLang('id'));
 
-// ── Demo / sample license keys (for testing without backend) ─────
-const DEMO_KEYS = {
-  'BOOM-DEMO-PRO-2024': { pro: true, status: 'active',   email: 'demo@bassboost.app' },
-  'BOOM-TRIAL-3DAY':    { pro: true, status: 'trialing', email: 'trial@bassboost.app', trialEnd: new Date(Date.now() + 3*864e5).toISOString() },
-};
-
 // ── Trial submit — generates a code and immediately redeems it ────
 document.getElementById('trialSubmitBtn').addEventListener('click', async () => {
   const email = document.getElementById('trialEmail').value.trim();
@@ -456,16 +449,6 @@ document.getElementById('trialSubmitBtn').addEventListener('click', async () => 
 async function verifyLicense(key, silent = false, email = null) {
   if (!silent) setMsg('proMsg','inf', t.verifying);
 
-  // Demo keys still work offline for testing
-  const demo = DEMO_KEYS[key.trim().toUpperCase()];
-  if (demo) {
-    licenseData = { ...demo, licenseKey: key.trim().toUpperCase() };
-    settings.pro = true;
-    chrome.storage.sync.set({ boomLicense: licenseData });
-    if (!silent) setMsg('proMsg','ok', t.proActivated);
-    save(); applyToUI(); return;
-  }
-
   try {
     const res  = await fetch(`${API}/redeem-code`, {
       method: 'POST',
@@ -493,7 +476,7 @@ async function verifyLicense(key, silent = false, email = null) {
       }
     }
   } catch (e) {
-    if (licenseData) settings.pro = true; // offline fallback
+    // Offline: keep cached Pro state but do not auto-grant it
     if (!silent) setMsg('proMsg','inf', t.offlineCache);
   }
   save(); applyToUI();
