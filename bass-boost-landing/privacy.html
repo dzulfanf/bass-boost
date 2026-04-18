@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
+<title>Privacy Policy — Bass Boost</title>
+<meta name="description" content="Privacy policy for the Bass Boost Chrome extension and website.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#03050d;--card:#090e1c;--border:#141d35;--blue:#2979ff;--purple:#a855f7;--cyan:#00e5ff;--gold:#f59e0b;--text:#d0daf5;--muted:#5a6f9a}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.7}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(41,121,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(41,121,255,.015) 1px,transparent 1px);background-size:32px 32px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:rgba(3,5,13,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1rem;letter-spacing:3px;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+.btn-nav{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;font-size:.8rem;font-weight:500;padding:7px 18px;border-radius:100px;text-decoration:none;box-shadow:0 0 18px rgba(41,121,255,.35);transition:filter .2s}
+.btn-nav:hover{filter:brightness(1.15)}
+
+/* CONTENT */
+.page{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:120px 24px 80px}
+
+.page-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(41,121,255,.1);border:1px solid rgba(41,121,255,.28);border-radius:100px;padding:5px 14px;font-size:.7rem;color:#448aff;letter-spacing:.05em;margin-bottom:20px}
+
+h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;letter-spacing:-0.5px;margin-bottom:10px}
+.grad{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+.updated{font-size:.78rem;color:var(--muted);margin-bottom:48px}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 32px;margin-bottom:16px}
+.section:hover{border-color:rgba(41,121,255,.2)}
+
+h2{font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+
+p{font-size:.92rem;color:var(--text);margin-bottom:12px}
+p:last-child{margin-bottom:0}
+
+ul{margin:8px 0 12px 20px;display:flex;flex-direction:column;gap:6px}
+li{font-size:.92rem;color:var(--text)}
+li:last-child{margin-bottom:0}
+
+.highlight{background:rgba(41,121,255,.07);border:1px solid rgba(41,121,255,.18);border-radius:12px;padding:14px 18px;font-size:.88rem;color:var(--muted);margin-top:8px;line-height:1.65}
+.highlight strong{color:var(--text)}
+
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;padding:32px 24px;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--text)}
+
+@media(max-width:560px){
+  nav{padding:12px 18px}
+  .page{padding:100px 16px 60px}
+  .section{padding:20px 18px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Bass Boost</a>
+  <a href="https://chromewebstore.google.com" class="btn-nav" target="_blank" rel="noopener noreferrer">Get Extension</a>
+</nav>
+
+<main class="page">
+
+  <div class="page-badge">Legal</div>
+  <h1><span class="grad">Privacy Policy</span></h1>
+  <p class="updated">Last updated: April 18, 2026</p>
+
+  <div class="section">
+    <h2>Overview</h2>
+    <p>Bass Boost is a Chrome extension and web service that enhances audio on any website. We built it with privacy in mind: no accounts, no tracking, no ads.</p>
+    <div class="highlight"><strong>Short version:</strong> We do not collect, sell, or share personal data. The only identifier we use is an anonymous device ID generated locally on your device, used solely for license binding.</div>
+  </div>
+
+  <div class="section">
+    <h2>Data We Collect</h2>
+    <p>We collect the minimum data necessary to operate the license system:</p>
+    <ul>
+      <li><strong>Device ID</strong> — a randomly generated UUID created on first install. Stored locally in Chrome storage. Used only to bind your Pro license to your device. It is never linked to your identity.</li>
+      <li><strong>Email address</strong> — only if you start a free trial. Used to send your trial license key. Not stored beyond what is necessary to fulfill the request.</li>
+      <li><strong>Donation code</strong> — a unique code (e.g. <code>BAS-XXXX-XXXX</code>) generated when you initiate a donation. Stored temporarily (30 days) in our database to allow license redemption.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data We Do NOT Collect</h2>
+    <ul>
+      <li>Your browsing history or the websites you visit</li>
+      <li>Audio content you listen to</li>
+      <li>Your name, location, or any demographic information</li>
+      <li>Cookies or cross-site tracking identifiers</li>
+      <li>Any data from pages where the extension is active</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>How Your Settings Are Stored</h2>
+    <p>All extension settings (bass level, EQ, presets, Night Mode, etc.) are stored using Chrome's built-in <code>chrome.storage.sync</code> API. This syncs your settings across your Chrome profile on different devices. We never receive or have access to your settings.</p>
+  </div>
+
+  <div class="section">
+    <h2>License & Payments</h2>
+    <p>Payments are processed exclusively through <a href="https://saweria.co" target="_blank" rel="noopener noreferrer">Saweria</a>, a third-party donation platform. We do not handle or store payment card information.</p>
+    <p>Saweria sends us a webhook notification when a donation is completed. This notification contains the donation amount and the code you pasted in the message field. No other payment information is shared with us.</p>
+    <p>Please refer to <a href="https://saweria.co/privacy" target="_blank" rel="noopener noreferrer">Saweria's Privacy Policy</a> for how they handle your payment data.</p>
+  </div>
+
+  <div class="section">
+    <h2>Backend & Data Retention</h2>
+    <p>Our backend runs on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a> serverless functions. License data is stored in an <a href="https://upstash.com" target="_blank" rel="noopener noreferrer">Upstash Redis</a> database with a 30-day TTL (time to live). After 30 days, license records expire automatically unless a paid activation has been recorded.</p>
+    <p>Active Pro licenses (paid) are retained indefinitely to allow silent re-verification.</p>
+  </div>
+
+  <div class="section">
+    <h2>Third-Party Services</h2>
+    <ul>
+      <li><strong>Vercel</strong> — hosting and serverless functions. May log request IPs for security purposes. <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+      <li><strong>Upstash</strong> — Redis database for license storage. <a href="https://upstash.com/trust/privacy.pdf" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+      <li><strong>Saweria</strong> — donation processing. <a href="https://saweria.co/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+      <li><strong>Google Fonts</strong> — used on this website only, not in the extension. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Permissions Justification</h2>
+    <p>The extension requests the following Chrome permissions:</p>
+    <ul>
+      <li><strong>tabCapture, scripting, activeTab</strong> — required to inject the audio processing engine into the active tab and capture audio for processing via the Web Audio API.</li>
+      <li><strong>storage</strong> — to save your settings and license status locally.</li>
+      <li><strong>tabs</strong> — to display the hostname of the current tab in the popup.</li>
+      <li><strong>host_permissions (&lt;all_urls&gt;)</strong> — required because the extension enhances audio on any website you choose to use it on, not just a fixed list of sites.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Children's Privacy</h2>
+    <p>Bass Boost is not directed at children under 13. We do not knowingly collect any information from children. If you believe a child has provided us with personal data, please contact us and we will delete it.</p>
+  </div>
+
+  <div class="section">
+    <h2>Changes to This Policy</h2>
+    <p>We may update this policy from time to time. Changes will be reflected on this page with an updated date. Continued use of the extension after changes constitutes acceptance of the updated policy.</p>
+  </div>
+
+  <div class="section">
+    <h2>Contact</h2>
+    <p>If you have questions about this privacy policy or your data, you can reach us via the Chrome Web Store support tab on the Bass Boost extension listing.</p>
+  </div>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 Bass Boost &nbsp;·&nbsp; <a href="/">Home</a> &nbsp;·&nbsp; Privacy Policy</p>
+</footer>
+
+</body>
+</html>
