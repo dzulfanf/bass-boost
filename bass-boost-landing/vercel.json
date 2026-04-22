@@ -3,10 +3,12 @@
   "builds": [
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "donate.html", "use": "@vercel/static" },
-    { "src": "donate.js", "use": "@vercel/static" }
+    { "src": "donate.js", "use": "@vercel/static" },
+    { "src": "privacy.html", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/donate", "dest": "/donate.html" }
+    { "src": "/donate", "dest": "/donate.html" },
+    { "src": "/privacy", "dest": "/privacy.html" }
   ],
   "headers": [
     {
