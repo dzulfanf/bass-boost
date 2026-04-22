@@ -2,15 +2,13 @@
   "manifest_version": 3,
   "name": "Bass Boost",
   "version": "1.0",
-  "description": "Bass boost, 10-band EQ & audio enhancer for YouTube, Spotify, Netflix and any site.",
+  "description": "Bass boost, 10-band EQ & audio enhancer for any website.",
   "permissions": [
-    "tabCapture",
     "activeTab",
-    "scripting",
     "storage",
     "tabs"
   ],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": ["https://bass-boost-backend.vercel.app/*"],
   "externally_connectable": {
     "matches": [
       "https://bass-boost-landing.vercel.app/*"
