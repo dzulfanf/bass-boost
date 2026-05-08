@@ -4,7 +4,8 @@
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "donate.html", "use": "@vercel/static" },
     { "src": "donate.js", "use": "@vercel/static" },
-    { "src": "privacy.html", "use": "@vercel/static" }
+    { "src": "privacy.html", "use": "@vercel/static" },
+    { "src": "landing.js", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/donate", "dest": "/donate.html" },
